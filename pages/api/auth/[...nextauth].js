@@ -42,6 +42,7 @@ export default NextAuth({
       // Initial sign in
       if (account && user) {
         //if exists it is the 1st time the user has signed in.
+        console.log({ user });
         return {
           ...token,
           accessToken: account.access_token,
@@ -63,9 +64,10 @@ export default NextAuth({
     },
 
     async session({ session, token }) {
-      session.username = token.username;
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
+      session.user.username = token.username;
+      session.user.image;
       session.error = token.error;
 
       return session;

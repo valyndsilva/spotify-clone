@@ -288,3 +288,11 @@ Open spotify developers dashboard and add the Redirect URIs:
 http://localhost:3000
 http://localhost:3000/api/auth/callback/spotify
 ```
+
+You should now be able to login.
+
+## Middleware Setup:
+
+Every time a user makes a request to the site we pass the request through (a server that checks something like a JWT token) middleware and then it reaches the page if the user has the accessToken. If not it redirects to logout screen.
+Basically, we setup the middleware to redirect a person who is not logged in to the login page.
+Create a file under pages called "\_middleware.js"
