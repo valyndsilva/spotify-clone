@@ -10,12 +10,15 @@
     "@heroicons/react": "^1.0.6",
     "dotenv": "^16.0.1",
     "formidable": "^2.0.1",
+    "lodash": "^4.17.21",
     "next": "latest",
     "next-auth": "^4.5.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "recoil": "^0.7.3",
     "spotify-web-api-node": "^5.0.2",
-    "superagent": "^7.1.6"
+    "superagent": "^7.1.6",
+    "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
     "@types/node": "17.0.35",

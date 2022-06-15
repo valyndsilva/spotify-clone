@@ -38,6 +38,16 @@ export default NextAuth({
   },
   //https://next-auth.js.org/tutorials/refresh-token-rotation
   callbacks: {
+    // async jwt({ token, account }) {
+    //   if (account) {
+    //     token.accessToken = account.refresh_token;
+    //   }
+    //   return token;
+    // },
+    // async session(session, user) {
+    //   session.user = user;
+    //   return session;
+    // },
     async jwt({ token, account, user }) {
       // Initial sign in
       if (account && user) {
@@ -67,9 +77,8 @@ export default NextAuth({
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
       session.user.username = token.username;
-      session.user.image;
-      session.error = token.error;
-
+      session.user.image = token.image;
+      console.log("Async session callback", token);
       return session;
     },
   },
