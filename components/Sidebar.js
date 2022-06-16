@@ -3,13 +3,14 @@ import {
   HomeIcon,
   SearchIcon,
   LibraryIcon,
-  PlusCircleIcon,
-  HeartIcon,
-  RssIcon,
+  PlusIcon,
   LogoutIcon,
 } from "@heroicons/react/outline";
+import { HeartIcon } from "@heroicons/react/solid";
 import { signOut, useSession } from "next-auth/react";
 import useSpotify from "../hooks/useSpotify";
+import { useRecoilState } from "recoil";
+import { playlistIdState } from "../atoms/playlistAtom";
 
 function Sidebar() {
   const spotifyApi = useSpotify();
@@ -18,7 +19,8 @@ function Sidebar() {
   // console.log(status);
 
   const [playlist, setPlaylist] = useState([]);
-  const [playlistId, setPlaylistId] = useState(null);
+  // const [playlistId, setPlaylistId] = useState(null);
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
 
   console.log("You picked playlistId:", playlistId);
 
@@ -31,15 +33,15 @@ function Sidebar() {
   }, [session, spotifyApi]);
 
   return (
-    <nav className="text-gray-500 p-5 text-sm border-r border-gray-900  h-screen overflow-y-scroll scrollbar-hide">
+    <div className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900  h-screen overflow-y-scroll scrollbar-hide hidden  sm:max-w-[12rem] lg:max-w-[15rem] md:inline-flex md:max-w-[15rem] pb-36">
       <div className="space-y-4">
-        <button
+        {/* <button
           className="flex items-center space-x-2 hover:text-white"
           onClick={() => signOut()}
         >
           <LogoutIcon className="w-5 h-5" />
           <p>Log out</p>
-        </button>
+        </button> */}
         <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="w-5 h-5" />
           <p>Home</p>
@@ -56,17 +58,14 @@ function Sidebar() {
         <hr className="border-t-[0.1px] border-gray-900" />
 
         <button className="flex items-center space-x-2 hover:text-white">
-          <PlusCircleIcon className="w-5 h-5" />
+          <PlusIcon className="w-5 h-5 bg-white p-1 rounded text-black" />
           <p>Create Playlist</p>
         </button>
         <button className="flex items-center space-x-2 hover:text-white">
-          <HeartIcon className="w-5 h-5" />
+          <HeartIcon className="w-5 h-5 text-white p-1 rounded bg-blue-500" />
           <p>Liked Songs</p>
         </button>
-        <button className="flex items-center space-x-2 hover:text-white">
-          <RssIcon className="w-5 h-5" />
-          <p>Your Episodes</p>
-        </button>
+
         <hr className="border-t-[0.1px] border-gray-900" />
 
         {/* Playlists */}
@@ -80,7 +79,7 @@ function Sidebar() {
           </p>
         ))}
       </div>
-    </nav>
+    </div>
   );
 }
 
