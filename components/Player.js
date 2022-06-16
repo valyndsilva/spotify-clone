@@ -62,16 +62,42 @@ function Player() {
     }
   }, [currentTrackIdState, spotifyApi, session]);
 
+  //   const userDevices = () => {
+  //     spotifyApi.getMyDevices().then((data) => {
+  //       let availableDevices = data.body.devices;
+  //       availableDevices.map((device) => {
+  //         console.log({ device });
+  //         console.log(device.is_active);
+  //         (device.is_active)?( spotifyApi.setVolume(volume)):(null);
+  //         return device;
+  //       });
+  //     });
+  //   };
+
+  //   useEffect(() => {
+  //     userDevices();
+  //   });
+
+  const debouncedAdjustVolume = useCallback(
+    debounce(async (volume) => {
+      // Check if user device active and only then set volume
+      spotifyApi.getMyDevices().then((data) => {
+        let availableDevices = data.body.devices;
+        //   console.log(availableDevices);
+        availableDevices.map((device) => {
+          console.log({ device });
+          console.log(device.is_active);
+          device.is_active ? spotifyApi.setVolume(volume) : null;
+          return volume;
+        });
+      });
+    }, 500),
+    []
+  );
   useEffect(() => {
     if (volume > 0 && volume < 100) debouncedAdjustVolume(volume);
   }, [volume]);
 
-  const debouncedAdjustVolume = useCallback(
-    debounce(async (volume) => {
-      spotifyApi.setVolume(volume).catch((err) => {});
-    }, 500),
-    []
-  );
   return (
     <div className="h-24 grid grid-cols-3 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-black to-gray-900 text-white">
       <div className="flex items-center space-x-4">
