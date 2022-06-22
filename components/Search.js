@@ -183,9 +183,9 @@ function Search() {
             </h2>
             <div className="space-y-3 border-2 border-[#262626] rounded-2xl p-3 bg-[#0D0D0D] overflow-y-scroll h-96 scrollbar-hide scrollbar-thumb-gray-600 scrollbar-thumb-rounded hover:scrollbar-thumb-gray-500">
               {searchResults.length === 0 ? (
-                <Track track={newReleases} />
+                <Track tracks={newReleases} />
               ) : (
-                <Track track={searchResults} />
+                <Track tracks={searchResults} />
               )}
             </div>
           </div>
@@ -213,9 +213,7 @@ function Search() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold  mb-5">
-          Browse All
-        </h2>
+        <h2 className="text-2xl font-bold  mb-5">Browse All</h2>
         <div className="grid gap-3 grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8">
           {categories &&
             categories.map((cate, index) => (

@@ -60,7 +60,7 @@ function Player() {
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && !deviceId && !isDeviceActive) {
-      //fetch Categories Info
+      //fetch Device Info
       fetchDevice();
     }
   }, [deviceIdState, isDeviceActiveState, spotifyApi, session]);
@@ -86,29 +86,30 @@ function Player() {
     if (volume > 0 && volume < 100) debouncedAdjustVolume(volume);
   }, [volume]);
 
-  // const fetchCurrentSong = () => {
-  //   if (!songInfo) {
-  //     // Get the User's Currently Playing Track
-  //     spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-  //       // console.log("Now Playing:", data.body?.item);
-  //       setCurrentTrackId(data.body?.item?.id);
+  const fetchCurrentSong = () => {
+    if (!songInfo) {
+      // Get the User's Currently Playing Track
+      spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+        // console.log("Now Playing:", data.body?.item);
+        setCurrentTrackId(data.body?.item?.id);
 
-  //       // Get Information About The User's Current Playback State
-  //       spotifyApi.getMyCurrentPlaybackState().then((data) => {
-  //         setIsPlaying(data.body?.is_playing);
-  //       });
-  //     });
-  //   }
-  // };
+        // Get Information About The User's Current Playback State
+        spotifyApi.getMyCurrentPlaybackState().then((data) => {
+          setIsPlaying(data.body?.is_playing);
+        });
+      });
+    }
+  };
 
-  // useEffect(() => {
-  //   if (spotifyApi.getAccessToken() && !currentTrackId) {
-  //     //fetch song Info
-  //     fetchCurrentSong();
-  //     setVolume(50);
-  //   }
-  // }, [currentTrackIdState, spotifyApi, session]);
+  useEffect(() => {
+    if (spotifyApi.getAccessToken() && !currentTrackId) {
+      //fetch song Info
+      fetchCurrentSong();
+      setVolume(50);
+    }
+  }, [currentTrackIdState, spotifyApi, session]);
 
+  // Handle Play/Pause events if device id available and is_playing is set to true
   const handlePlayPause = () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
       console.log("handlePlayPause:", data.body);

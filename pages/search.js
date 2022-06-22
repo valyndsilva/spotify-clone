@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Sidebar, Search } from "../components";
+import { Sidebar, Search, Player } from "../components";
 
 const SearchPage = () => {
   return (
@@ -13,6 +13,9 @@ const SearchPage = () => {
         <Sidebar />
         <Search />
       </main>
+      <div className="sticky bottom-0">
+        <Player />
+      </div>
     </div>
   );
 };

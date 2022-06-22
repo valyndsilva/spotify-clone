@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Song from "./Song";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistState, currentTrackIdState } from "../atoms/playlistAtom";
@@ -7,34 +7,46 @@ import useSpotify from "../hooks/useSpotify";
 import Image from "next/image";
 import { PauseIcon, HeartIcon, PlayIcon } from "@heroicons/react/solid";
 import {} from "@heroicons/react/outline";
+import { useSession } from "next-auth/react";
 
-function Track({ track }) {
-  console.log({ track });
-
+function Track({ tracks }) {
+  console.log({ tracks });
+  const { data: session } = useSession();
   const spotifyApi = useSpotify();
   const [hasLiked, setHasLiked] = useState(false);
 
   //   const [currentTrackId, setCurrentTrackId]=useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const playSong = () => {
-    // setCurrentTrackId(track.id);
+    // console.log({ trackId });
+    // setCurrentTrackId(trackId);
     setIsPlaying(true);
     spotifyApi.play({
-      uris: [track.uri],
+      uris: [tracks.uri],
     });
   };
 
-  const handlePlay = () => {
-    // setPlayingTrack(track);
-    // if (track.uri === playingTrack.uri) {
-    //   setPlay(!play);
-    // }
+  useEffect(() => {
+    if (spotifyApi.getAccessToken()) {
+    }
+  }, []);
+
+  const handlePlayPause = () => {
+    spotifyApi.getMyCurrentPlaybackState().then((data) => {
+      console.log("handlePlayPause:", data.body);
+      if (data.body?.is_playing && data.body?.device.id) {
+        spotifyApi.pause();
+        setIsPlaying(false);
+      } else {
+        spotifyApi.play();
+        setIsPlaying(true);
+      }
+    });
   };
-  //   <Song key={track.id} track={track} order={index} />
   return (
     <div className="text-white px-8 flex-col space-y-1 pb-28">
-      {track.map((track, index) => (
-        <div
+      {tracks.map((track, index) => (
+        <div key={index}
           className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
           onClick={playSong}
         >
@@ -70,7 +82,7 @@ function Track({ track }) {
                   <>
                     <div
                       className="h-10 w-10 rounded-full border  flex items-center justify-center absolute -right-0.5 icon hover:scale-110"
-                      onClick={handlePlay}
+                      onClick={handlePlayPause}
                     >
                       <PauseIcon className="text-white text-xl" />
                     </div>
@@ -79,7 +91,7 @@ function Track({ track }) {
                   <>
                     <div
                       className="h-10 w-10 rounded-full text-gray-400 font-thin flex items-center justify-center absolute -right-0.5 icon hover:scale-110"
-                      onClick={handlePlay}
+                      onClick={handlePlayPause}
                     >
                       <PlayIcon className="text-white text-xl ml-[1px]" />
                     </div>
