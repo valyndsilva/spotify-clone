@@ -10,7 +10,7 @@ import { signOut, useSession } from "next-auth/react";
 import useSpotify from "../hooks/useSpotify";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
-import Link from "next/link";
+import { currentButtonState } from "../atoms/sidebarAtom";
 
 function Sidebar() {
   const spotifyApi = useSpotify();
@@ -19,7 +19,9 @@ function Sidebar() {
   // console.log(status);
 
   const [playlist, setPlaylist] = useState([]);
+  // const [playlistId, setPlaylistId] = useState(null);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  const [currentButton, setCurrentButton] = useRecoilState(currentButtonState);
   // console.log("You picked playlistId:", playlistId);
   // console.log(currentButton);
   useEffect(() => {
@@ -33,49 +35,46 @@ function Sidebar() {
   return (
     <div className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900  h-screen overflow-y-scroll scrollbar-hide hidden  sm:max-w-[12rem] lg:max-w-[15rem] md:inline-flex md:max-w-[15rem] pb-36">
       <div className="space-y-4">
-        {/* <button
+
+        <button
           className="flex items-center space-x-2 hover:text-white"
-          onClick={() => signOut()}
+          onClick={() => setCurrentButton("Home")}
         >
-          <LogoutIcon className="w-5 h-5" />
-          <p>Log out</p>
-        </button> */}
-
-        <Link href="/">
-          <span className="flex items-center space-x-2 hover:text-white">
-            <HomeIcon className="w-5 h-5" />
-            <p>Home</p>
-          </span>
-        </Link>
-
-        <Link href="/search">
-          <span className="flex items-center space-x-2 hover:text-white">
-            <SearchIcon className="w-5 h-5" />
-            <p>Search</p>
-          </span>
-        </Link>
-
-        <Link href="/collection/playlists">
-          <span className="flex items-center space-x-2 hover:text-white">
-            <LibraryIcon className="w-5 h-5" />
-            <p>Your Library</p>
-          </span>
-        </Link>
+          <HomeIcon className="w-5 h-5" />
+          <p>Home</p>
+        </button>
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={() => setCurrentButton("Search")}
+          
+        >
+          <SearchIcon className="w-5 h-5" />
+          <p>Search</p>
+        </button>
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={() => setCurrentButton("Your Library")}
+        >
+          <LibraryIcon className="w-5 h-5" />
+          <p>Your Library</p>
+        </button>
 
         <hr className="border-t-[0.1px] border-gray-900" />
 
-        <Link href="/playlist">
-          <span className="flex items-center space-x-2 hover:text-white">
-            <PlusIcon className="w-5 h-5 bg-white p-1 rounded text-black" />
-            <p>Create Playlist</p>
-          </span>
-        </Link>
-        <Link href="/collection/tracks">
-          <span className="flex items-center space-x-2 hover:text-white">
-            <HeartIcon className="w-5 h-5 text-white p-1 rounded bg-blue-500" />
-            <p>Liked Songs</p>
-          </span>
-        </Link>
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={() => setCurrentButton("Create Playlist")}
+        >
+          <PlusIcon className="w-5 h-5 bg-white p-1 rounded text-black" />
+          <p>Create Playlist</p>
+        </button>
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={() => setCurrentButton("Liked Songs")}
+        >
+          <HeartIcon className="w-5 h-5 text-white p-1 rounded bg-blue-500" />
+          <p>Liked Songs</p>
+        </button>
 
         <hr className="border-t-[0.1px] border-gray-900" />
 

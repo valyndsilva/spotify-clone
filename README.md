@@ -1156,3 +1156,9 @@ Used for example when you increase decrease volume it called the Spotify API eve
     []
   );
 ```
+
+Install HeadlessUI to use components:
+
+```
+npm install @headlessui/react
+```

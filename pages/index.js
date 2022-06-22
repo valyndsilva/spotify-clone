@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { getSession } from "next-auth/react";
-import { Sidebar, MainView, Player } from "../components";
-const Home = () => {
+import { Sidebar, Home, Player } from "../components";
+const Main = () => {
   return (
     <div className="bg-black h-screen overflow-hidden">
       <Head>
@@ -11,7 +11,7 @@ const Home = () => {
 
       <main className="flex">
         <Sidebar />
-        <MainView />
+        <Home />
       </main>
       <div className="sticky bottom-0">
         <Player />
@@ -29,4 +29,4 @@ export async function getServerSideProps(context) {
     },
   };
 }
-export default Home;
+export default Main;

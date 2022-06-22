@@ -1,5 +1,13 @@
 export { default as Sidebar } from "./Sidebar";
-export { default as MainView } from "./MainView";
-export { default as Songs } from "./Songs";
-export { default as Song } from "./Song";
+export { default as Home } from "./Home";
 export { default as Player } from "./Player";
+export { default as Song } from "./Song";
+export { default as Songs } from "./Songs";
+export { default as Liked } from "./Liked";
+export { default as Search } from "./Search";
+export { default as SearchInput } from "./SearchInput";
+export { default as Playlist } from "./Playlist";
+export { default as Library } from "./Library";
+export { default as DropDown } from "./DropDown";
+export { default as Track } from "./Track";
+export { default as Poster } from "./Poster";

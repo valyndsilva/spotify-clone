@@ -3,6 +3,11 @@ import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
+import {
+  deviceIdState,
+  isDeviceActiveState,
+  volumeState,
+} from "../atoms/playerAtom";
 import useSpotify from "../hooks/useSpotify";
 import useSongInfo from "../hooks/useSongInfo";
 import {
@@ -21,21 +26,74 @@ import { debounce } from "lodash";
 
 function Player() {
   const { data: session } = useSession();
+  const spotifyApi = useSpotify();
+  const songInfo = useSongInfo();
+  console.log(songInfo);
 
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
+
+  const [deviceId, setDeviceId] = useRecoilState(deviceIdState);
+
+  const [isDeviceActive, setIsDeviceActive] =
+    useRecoilState(isDeviceActiveState);
+
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+
+  // const [volume, setVolume] = useRecoilState(volumeState);
   const [volume, setVolume] = useState(50);
 
-  const spotifyApi = useSpotify();
+  const fetchDevice = () => {
+    // Check if user device active and only then set volume
+    spotifyApi.getMyDevices().then((data) => {
+      let availableDevices = data.body.devices;
+      console.log(availableDevices);
+      availableDevices.map((device) => {
+        console.log({ device });
+        console.log(device.id);
+        console.log(device.is_active);
+        setDeviceId(device.id);
+        setIsDeviceActive(device.is_active);
+      });
+    });
+  };
 
-  const songInfo = useSongInfo();
-  //   console.log(songInfo);
+  useEffect(() => {
+    if (spotifyApi.getAccessToken() && !deviceId && !isDeviceActive) {
+      //fetch Categories Info
+      fetchDevice();
+    }
+  }, [deviceIdState, isDeviceActiveState, spotifyApi, session]);
+
+  const debouncedAdjustVolume = useCallback(
+    debounce((volume) => {
+      spotifyApi.setVolume(volume).catch((err) => {});
+      return volume;
+    }, 500),
+    []
+  );
+
+  // const debouncedAdjustVolume = useCallback(
+  //   debounce((volume) => {
+  //     console.log(deviceId);
+  //     deviceId && spotifyApi.setVolume(volume);
+  //     return volume;
+  //   }, 500),
+  //   []
+  // );
+
+  useEffect(() => {
+    if (volume > 0 && volume < 100) debouncedAdjustVolume(volume);
+  }, [volume]);
+
   const fetchCurrentSong = () => {
     if (!songInfo) {
+      // Get the User's Currently Playing Track
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        console.log("Now Playing:", data.body?.item);
+        // console.log("Now Playing:", data.body?.item);
         setCurrentTrackId(data.body?.item?.id);
+
+        // Get Information About The User's Current Playback State
         spotifyApi.getMyCurrentPlaybackState().then((data) => {
           setIsPlaying(data.body?.is_playing);
         });
@@ -62,44 +120,8 @@ function Player() {
     }
   }, [currentTrackIdState, spotifyApi, session]);
 
-  //   const userDevices = () => {
-  //     spotifyApi.getMyDevices().then((data) => {
-  //       let availableDevices = data.body.devices;
-  //       availableDevices.map((device) => {
-  //         console.log({ device });
-  //         console.log(device.is_active);
-  //         (device.is_active)?( spotifyApi.setVolume(volume)):(null);
-  //         return device;
-  //       });
-  //     });
-  //   };
-
-  //   useEffect(() => {
-  //     userDevices();
-  //   });
-
-  const debouncedAdjustVolume = useCallback(
-    debounce(async (volume) => {
-      // Check if user device active and only then set volume
-      spotifyApi.getMyDevices().then((data) => {
-        let availableDevices = data.body.devices;
-        //   console.log(availableDevices);
-        availableDevices.map((device) => {
-          console.log({ device });
-          console.log(device.is_active);
-          device.is_active ? spotifyApi.setVolume(volume) : null;
-          return volume;
-        });
-      });
-    }, 500),
-    []
-  );
-  useEffect(() => {
-    if (volume > 0 && volume < 100) debouncedAdjustVolume(volume);
-  }, [volume]);
-
   return (
-    <div className="h-24 grid grid-cols-3 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-black to-gray-900 text-white">
+    <div className="h-24 grid grid-cols-3 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-black to-gray-900 text-white border-t border-gray-800">
       <div className="flex items-center space-x-4">
         {/* <div className=" w-10 h-10 cursor-pointer relative">
           <Image

@@ -14,7 +14,7 @@ function useSpotify() {
 
   useEffect(() => {
     if (session) {
-      console.log(session);
+      // console.log(session);
       //If refresh access token attempt fails, redirect user to login page
       if (session.error === "RefreshAccessTokenError") {
         signIn();
