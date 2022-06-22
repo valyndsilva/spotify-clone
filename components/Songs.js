@@ -5,11 +5,17 @@ import Song from "./Song";
 
 function Songs() {
   const playlist = useRecoilValue(playlistState);
+  console.log({ playlist });
 
   return (
     <div className="text-white px-8 flex-col space-y-1 pb-28">
       {playlist?.tracks.map((track, index) => (
-        <Song key={track.track.id} track={track} order={index} />
+        <Song
+          key={track.track.id}
+          trackId={track.track.id}
+          track={track}
+          order={index}
+        />
       ))}
     </div>
   );

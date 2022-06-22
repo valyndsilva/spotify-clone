@@ -86,24 +86,33 @@ function Player() {
     if (volume > 0 && volume < 100) debouncedAdjustVolume(volume);
   }, [volume]);
 
-  const fetchCurrentSong = () => {
-    if (!songInfo) {
-      // Get the User's Currently Playing Track
-      spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        // console.log("Now Playing:", data.body?.item);
-        setCurrentTrackId(data.body?.item?.id);
+  // const fetchCurrentSong = () => {
+  //   if (!songInfo) {
+  //     // Get the User's Currently Playing Track
+  //     spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+  //       // console.log("Now Playing:", data.body?.item);
+  //       setCurrentTrackId(data.body?.item?.id);
 
-        // Get Information About The User's Current Playback State
-        spotifyApi.getMyCurrentPlaybackState().then((data) => {
-          setIsPlaying(data.body?.is_playing);
-        });
-      });
-    }
-  };
+  //       // Get Information About The User's Current Playback State
+  //       spotifyApi.getMyCurrentPlaybackState().then((data) => {
+  //         setIsPlaying(data.body?.is_playing);
+  //       });
+  //     });
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (spotifyApi.getAccessToken() && !currentTrackId) {
+  //     //fetch song Info
+  //     fetchCurrentSong();
+  //     setVolume(50);
+  //   }
+  // }, [currentTrackIdState, spotifyApi, session]);
 
   const handlePlayPause = () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      if (data.body?.is_playing) {
+      console.log("handlePlayPause:", data.body);
+      if (data.body?.is_playing && data.body?.device.id) {
         spotifyApi.pause();
         setIsPlaying(false);
       } else {
@@ -112,14 +121,6 @@ function Player() {
       }
     });
   };
-  useEffect(() => {
-    if (spotifyApi.getAccessToken() && !currentTrackId) {
-      //fetch song Info
-      fetchCurrentSong();
-      setVolume(50);
-    }
-  }, [currentTrackIdState, spotifyApi, session]);
-
   return (
     <div className="h-24 grid grid-cols-3 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-black to-gray-900 text-white border-t border-gray-800">
       <div className="flex items-center space-x-4">

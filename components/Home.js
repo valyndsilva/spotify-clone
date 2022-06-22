@@ -45,7 +45,7 @@ function Home() {
             uri: data.body.uri,
             tracks: data.body.tracks.items,
           };
-          console.log(playlistData);
+          // console.log(playlistData);
           setPlaylist(playlistData);
         })
         .catch((error) =>
