@@ -2,7 +2,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
+import {
+  currentTrackIdState,
+  currentAlbumIdState,
+  isPlayingState,
+  currentAlbumSongIdState,
+} from "../atoms/songAtom";
 import {
   deviceIdState,
   isDeviceActiveState,
@@ -10,6 +15,7 @@ import {
 } from "../atoms/playerAtom";
 import useSpotify from "../hooks/useSpotify";
 import useSongInfo from "../hooks/useSongInfo";
+import useAlbumInfo from "../hooks/useAlbumInfo";
 import {
   ReplyIcon,
   SwitchHorizontalIcon,
@@ -28,11 +34,18 @@ function Player() {
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
   const songInfo = useSongInfo();
-  console.log(songInfo);
+  console.log({ songInfo });
+  const albumInfo = useAlbumInfo();
+  console.log({ albumInfo });
 
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
+  const [currentAlbumId, setCurrentAlbumId] =
+    useRecoilState(currentAlbumIdState);
+  const [currentAlbumSongId, setCurrentAlbumSongId] = useRecoilState(
+    currentAlbumSongIdState
+  );
   const [deviceId, setDeviceId] = useRecoilState(deviceIdState);
 
   const [isDeviceActive, setIsDeviceActive] =
@@ -88,6 +101,7 @@ function Player() {
 
   const fetchCurrentSong = () => {
     if (!songInfo) {
+      console.log("fetchCurrentSong Triggered!!");
       // Get the User's Currently Playing Track
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
         // console.log("Now Playing:", data.body?.item);
@@ -102,12 +116,35 @@ function Player() {
   };
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken() && !currentTrackId) {
-      //fetch song Info
+    if (spotifyApi.getAccessToken() && !currentTrackId && !songInfo) {
       fetchCurrentSong();
       setVolume(50);
     }
   }, [currentTrackIdState, spotifyApi, session]);
+
+  const fetchCurrentAlbumSong = () => {
+    if (!albumInfo) {
+      console.log("fetchCurrentAlbumSong Triggered!!");
+      // Get the User's Currently Playing Track
+      spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+        console.log("Now Playing:", data.body?.item);
+        // setCurrentAlbumId(data.body?.item?.id);
+        setCurrentAlbumSongId(data.body?.item?.id);
+        // Get Information About The User's Current Playback State
+        spotifyApi.getMyCurrentPlaybackState().then((data) => {
+          setIsPlaying(data.body?.is_playing);
+        });
+      });
+    }
+  };
+
+  // useEffect(() => {
+  //   if (spotifyApi.getAccessToken() && !currentAlbumId && !albumInfo) {
+  //     //fetch song Info
+  //     fetchCurrentAlbumSong();
+  //     setVolume(50);
+  //   }
+  // }, [currentAlbumIdState, spotifyApi, session]);
 
   // Handle Play/Pause events if device id available and is_playing is set to true
   const handlePlayPause = () => {

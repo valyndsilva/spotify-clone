@@ -9,5 +9,6 @@ export { default as SearchInput } from "./SearchInput";
 export { default as Playlist } from "./Playlist";
 export { default as Library } from "./Library";
 export { default as DropDown } from "./DropDown";
+export { default as Tracks } from "./Tracks";
 export { default as Track } from "./Track";
 export { default as Poster } from "./Poster";

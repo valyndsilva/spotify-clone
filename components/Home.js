@@ -4,7 +4,11 @@ import { Songs, DropDown } from "./";
 import Image from "next/image";
 import { shuffle } from "lodash";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { playlistIdState, playlistState } from "../atoms/playlistAtom";
+import {
+  playlistIdState,
+  playlistState,
+  playlistSongsState,
+} from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
 
 const colors = [
@@ -23,6 +27,7 @@ function Home() {
 
   const playlistId = useRecoilValue(playlistIdState);
   const [playlist, setPlaylist] = useRecoilState(playlistState);
+  const [playlistSongs, setPlaylistSongs] = useRecoilState(playlistSongsState);
 
   useEffect(() => {
     setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
@@ -34,8 +39,7 @@ function Home() {
       spotifyApi
         .getPlaylist(playlistId)
         .then((data) => {
-          // console.log(data.body);
-          // setPlaylist(data.body);
+          console.log(data.body);
 
           const playlistData = {
             id: data.body.id,
@@ -43,10 +47,15 @@ function Home() {
             imageUrl: data.body.images[0].url,
             description: data.body.description,
             uri: data.body.uri,
+            // tracks: data.body.tracks.items,
             tracks: data.body.tracks.items,
           };
           // console.log(playlistData);
           setPlaylist(playlistData);
+
+          const playlistSongsData = data.body.tracks.items;
+          console.log(playlistSongsData);
+          setPlaylistSongs(playlistSongsData);
         })
         .catch((error) =>
           console.log("Something went wrong with the playlist fetching", error)

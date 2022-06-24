@@ -10,7 +10,7 @@ function useSongInfo() {
   console.log({ currentTrackId });
 
   const [songInfo, setSongInfo] = useState(null);
-
+  console.log({ songInfo });
   useEffect(() => {
     if (spotifyApi.getAccessToken() && currentTrackId) {
       const fetchSongInfo = async () => {
@@ -26,6 +26,10 @@ function useSongInfo() {
           }
         ).then((res) => res.json());
         setSongInfo(trackInfo);
+        console.log({ trackInfo });
+
+        // const songUri = trackInfo.uri;
+        // console.log({ songUri });
       };
       fetchSongInfo();
     }

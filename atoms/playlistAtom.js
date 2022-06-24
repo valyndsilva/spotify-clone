@@ -3,6 +3,14 @@ export const playlistState = atom({
   key: "playlistState",
   default: null,
 });
+export const playlistSongsState = atom({
+  key: "playlistSongsState",
+  default: [],
+});
+export const newReleasesPlaylistSongsState = atom({
+  key: "newReleasesPlaylistSongsState",
+  default: [],
+});
 export const playlistIdState = atom({
   key: "playlistIdState",
   default: "37i9dQZF1DWVrBRunTOXCY",

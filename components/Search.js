@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { DropDown, SearchInput, Songs, Track, Poster } from ".";
+import { DropDown, SearchInput, Songs, Tracks, Poster } from ".";
 import useSpotify from "../hooks/useSpotify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Link from "next/link";
@@ -66,7 +66,9 @@ function Search() {
     spotifyApi
       .getNewReleases()
       .then((res) => {
+        console.log(res.body);
         console.log("List of New Releases:", res.body.albums.items);
+
         setNewReleases(
           res.body.albums.items.map((track) => {
             return {
@@ -183,9 +185,9 @@ function Search() {
             </h2>
             <div className="space-y-3 border-2 border-[#262626] rounded-2xl p-3 bg-[#0D0D0D] overflow-y-scroll h-96 scrollbar-hide scrollbar-thumb-gray-600 scrollbar-thumb-rounded hover:scrollbar-thumb-gray-500">
               {searchResults.length === 0 ? (
-                <Track tracks={newReleases} />
+                <Tracks tracks={newReleases} />
               ) : (
-                <Track tracks={searchResults} />
+                <Tracks tracks={searchResults} />
               )}
             </div>
           </div>
