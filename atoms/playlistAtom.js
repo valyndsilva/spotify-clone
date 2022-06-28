@@ -13,7 +13,7 @@ export const newReleasesPlaylistSongsState = atom({
 });
 export const playlistIdState = atom({
   key: "playlistIdState",
-  default: "37i9dQZF1DWVrBRunTOXCY",
+  default: "37i9dQZF1DXcBWIGoYBM5M",
 });
 
 export const currentPlaylistIdState = atom({

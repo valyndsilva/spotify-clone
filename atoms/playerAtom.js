@@ -2,15 +2,15 @@ import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 const { persistAtom } = recoilPersist();
 
-// export const playState = atom({
-//   key: "playState",
-//   default: false,
-// });
+export const playState = atom({
+  key: "playState",
+  default: false,
+});
 
-// export const playingTrackState = atom({
-//   key: "playingTrackState",
-//   default: "",
-// });
+export const playingTrackState = atom({
+  key: "playingTrackState",
+  default: "",
+});
 
 export const deviceIdState = atom({
   key: "deviceIdState",

@@ -26,7 +26,8 @@ function Song({
 
   // get songInfo here
 
-  const playSong = () => {
+  const handlePlay = () => {
+    console.log("handlePlay triggered in Song Component!!!!!!!!");
     console.log({
       track,
       trackId,
@@ -39,6 +40,8 @@ function Song({
     });
     setCurrentTrackId(trackId);
     setIsPlaying(true);
+    console.log(trackUri);
+
     spotifyApi.play({
       uris: [trackUri],
     });
@@ -47,7 +50,7 @@ function Song({
   return (
     <div
       className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
-      onClick={playSong}
+      onClick={handlePlay}
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>

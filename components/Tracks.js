@@ -1,19 +1,19 @@
-import React from "react";
-import { useRecoilState } from "recoil";
-import { newReleasesPlaylistSongsState } from "../atoms/playlistAtom";
+import React, { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { playingTrackState } from "../atoms/playerAtom";
+import {
+  currentAlbumSongIdState,
+  currentAlbumSongUriState,
+} from "../atoms/songAtom";
+
 import Track from "./Track";
 
 function Tracks({ tracks }) {
-  console.log({ tracks });
-
-  const [newReleasesPlaylistSongs, setNewReleasesPlaylistSongs] =
-    useRecoilState(newReleasesPlaylistSongsState);
-  setNewReleasesPlaylistSongs(tracks);
-  console.log({ newReleasesPlaylistSongs });
+  // console.log({ tracks });
 
   return (
     <div className="text-white px-8 flex-col space-y-1 pb-28">
-      {newReleasesPlaylistSongs?.map((track, index) => (
+      {tracks?.map((track, index) => (
         <Track
           key={track.id}
           order={index}

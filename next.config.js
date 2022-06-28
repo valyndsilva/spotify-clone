@@ -7,6 +7,7 @@ module.exports = {
       "t.scdn.co",
       "mixed-media-images.spotifycdn.com",
       "charts-images.scdn.co",
+      "newjams-images.scdn.co",
     ],
   },
 };

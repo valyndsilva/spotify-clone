@@ -15,13 +15,13 @@ function DropDown() {
         <div className="w-10 h-10 rounded cursor-pointer relative">
           <Image
             src={userImg}
-            alt="logo"
+            alt={session?.user?.name}
             layout="fill" // required
             objectFit="cover" // change to suit your needs
             priority
           />
         </div>
-        <h2>{session?.user.name}</h2>
+        <h2>{session?.user?.name}</h2>
         <ChevronDownIcon
           className="h-5 w-5 text-[#686868]"
           aria-hidden="true"

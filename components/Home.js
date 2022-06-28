@@ -20,6 +20,9 @@ const colors = [
   "from-pink-500",
   "from-purple-500",
 ];
+
+import { PlayIcon } from "@heroicons/react/solid";
+import { DotsHorizontalIcon, HeartIcon } from "@heroicons/react/outline";
 function Home() {
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
@@ -39,7 +42,7 @@ function Home() {
       spotifyApi
         .getPlaylist(playlistId)
         .then((data) => {
-          console.log(data.body);
+          // console.log(data.body);
 
           const playlistData = {
             id: data.body.id,
@@ -61,10 +64,11 @@ function Home() {
           console.log("Something went wrong with the playlist fetching", error)
         );
     }
-  }, [playlistIdState, spotifyApi, session]);
+  }, [playlistId, spotifyApi, session]);
 
   console.log({ playlistId });
   console.log({ playlist });
+  // console.log(playlistSongs);
   return (
     <div className="flex-grow text-white h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
@@ -90,10 +94,16 @@ function Home() {
           <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
             {playlist?.name}
           </h1>
+          <p>{playlist?.description}</p>
         </div>
       </section>
       <div>
-        <Songs />
+        <div className="flex items-center space-x-4 p-8">
+          <PlayIcon className=" w-20 h-20 text-green-500 hover:scale-110" />
+          <HeartIcon className=" w-10 h-10" />
+          <DotsHorizontalIcon className=" w-10 h-10" />
+        </div>
+        <Songs tracks={playlistSongs} />
       </div>
     </div>
   );

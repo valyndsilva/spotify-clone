@@ -1,8 +1,13 @@
-import { SearchIcon } from "@heroicons/react/outline";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  SearchIcon,
+} from "@heroicons/react/outline";
 
 function Search({ search, setSearch }) {
   return (
-    <div className="bg-white rounded-full overflow-hidden border-2 px-4 py-5 p-1 pr-2 flex items-center">
+    <div className="bg-white rounded-full overflow-hidden border-2 px-4 py-2 p-1 pr-2 flex items-center">
+     
       <form className="">
         <div className="flex ">
           <div className="relative w-96">

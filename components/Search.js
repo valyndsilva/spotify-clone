@@ -14,6 +14,8 @@ import {
 import { newReleasesState, searchResultsState } from "../atoms/searchAtom";
 import { ViewGridIcon } from "@heroicons/react/solid";
 import RecentlyPlayed from "./RecentlyPlayed";
+import { newReleasesPlaylistSongsState } from "../atoms/playlistAtom";
+import Header from "./Header";
 
 function Search() {
   const { data: session } = useSession();
@@ -34,43 +36,47 @@ function Search() {
   //   setPlayingTrack(track);
   // };
 
-  // Searching...
-  const fetchSearchResults = () => {
-    if (!search) return setSearchResults([]);
-    let cancel = false;
+  const [newReleasesPlaylistSongs, setNewReleasesPlaylistSongs] =
+    useRecoilState(newReleasesPlaylistSongsState);
 
-    spotifyApi
-      .searchTracks(search)
-      .then((res) => {
-        if (cancel) return;
-        console.log("Search Results:", res.body.albums.items);
-        setSearchResults(
-          res.body.tracks.items.map((track) => {
-            return {
-              id: track.id,
-              artist: track.artists[0].name,
-              title: track.name,
-              uri: track.uri,
-              albumUrl: track.album.images[0].url,
-              popularity: track.popularity,
-            };
-          })
-        );
-      })
-      .catch((error) => console.log("Something went wrong!", error));
-    return () => (cancel = true);
-  };
+  // Searching...
+  // const fetchSearchResults = () => {
+  //   if (!search) return setSearchResults([]);
+  //   let cancel = false;
+
+  //   spotifyApi
+  //     .searchTracks(search)
+  //     .then((res) => {
+  //       if (cancel) return;
+  //       console.log("Search Results:", res.body.albums.items);
+  //       setSearchResults(
+  //         res.body.tracks.items.map((track) => {
+  //           return {
+  //             id: track.id,
+  //             artist: track.artists[0].name,
+  //             title: track.name,
+  //             uri: track.uri,
+  //             albumUrl: track.album.images[0].url,
+  //             popularity: track.popularity,
+  //           };
+  //         })
+  //       );
+  //     })
+  //     .catch((error) => console.log("Something went wrong!", error));
+  //   return () => (cancel = true);
+  // };
 
   // New Releases...
   const fetchNewReleases = () => {
     spotifyApi
       .getNewReleases()
       .then((res) => {
-        console.log(res.body);
-        console.log("List of New Releases:", res.body.albums.items);
+        // console.log(res.body);
+        // console.log("List of New Releases:", res.body.albums.items);
 
         setNewReleases(
           res.body.albums.items.map((track) => {
+            setNewReleasesPlaylistSongs(track);
             return {
               id: track.id,
               artist: track.artists[0].name,
@@ -82,8 +88,10 @@ function Search() {
         );
       })
       .catch((error) => console.log("Something went wrong!", error));
+    // console.log({ newReleasesPlaylistSongs });
   };
 
+  // Get Current User's Recently Played Tracks
   const fetchRecentlyPlayed = () => {
     spotifyApi
       .getMyRecentlyPlayedTracks({ limit: 20 })
@@ -113,7 +121,7 @@ function Search() {
       })
       .then((data) => {
         const categoryList = data.body.categories.items;
-        console.log("List of Categories:", categoryList);
+        // console.log("List of Categories:", categoryList);
         setCategories(categoryList);
         categories.length > 0 &&
           categories.map((category, index) => {
@@ -131,6 +139,8 @@ function Search() {
 
       //fetch New Releases
       fetchNewReleases();
+
+      //fetch Recently Played
       fetchRecentlyPlayed();
     }
   }, [spotifyApi, session]);
@@ -144,14 +154,15 @@ function Search() {
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
-      <header className="flex items-center justify-between px-5 mt-5 mb-5">
+      {/* <header className="flex items-center justify-between px-5 mt-5 mb-5">
         <div className="">
           <SearchInput search={search} setSearch={setSearch} />
         </div>
         <div className="">
           <DropDown />
         </div>
-      </header>
+      </header> */}
+      <Header />
 
       <section className="flex flex-col  text-white p-8">
         {/* Search Results */}

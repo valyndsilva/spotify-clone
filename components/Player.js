@@ -1,21 +1,21 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   currentTrackIdState,
-  currentAlbumIdState,
   isPlayingState,
-  currentAlbumSongIdState,
+  currentSongUriState,
+  currentAlbumSongUriState,
 } from "../atoms/songAtom";
 import {
   deviceIdState,
   isDeviceActiveState,
+  playState,
   volumeState,
 } from "../atoms/playerAtom";
 import useSpotify from "../hooks/useSpotify";
 import useSongInfo from "../hooks/useSongInfo";
-import useAlbumInfo from "../hooks/useAlbumInfo";
 import {
   ReplyIcon,
   SwitchHorizontalIcon,
@@ -33,38 +33,37 @@ import { debounce } from "lodash";
 function Player() {
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
+
   const songInfo = useSongInfo();
-  console.log({ songInfo });
-  const albumInfo = useAlbumInfo();
-  console.log({ albumInfo });
+  // console.log({ songInfo });
 
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
-  const [currentAlbumId, setCurrentAlbumId] =
-    useRecoilState(currentAlbumIdState);
-  const [currentAlbumSongId, setCurrentAlbumSongId] = useRecoilState(
-    currentAlbumSongIdState
-  );
   const [deviceId, setDeviceId] = useRecoilState(deviceIdState);
 
   const [isDeviceActive, setIsDeviceActive] =
     useRecoilState(isDeviceActiveState);
 
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-
+  const [play, setPlay] = useRecoilState(playState);
   // const [volume, setVolume] = useRecoilState(volumeState);
   const [volume, setVolume] = useState(50);
+
+  const [currentSongUri, setCurrentSongUri] =
+    useRecoilState(currentSongUriState);
+
+  const currentAlbumSongUri = useRecoilValue(currentAlbumSongUriState);
 
   const fetchDevice = () => {
     // Check if user device active and only then set volume
     spotifyApi.getMyDevices().then((data) => {
       let availableDevices = data.body.devices;
-      console.log(availableDevices);
+      // console.log(availableDevices);
       availableDevices.map((device) => {
-        console.log({ device });
-        console.log(device.id);
-        console.log(device.is_active);
+        // console.log({ device });
+        // console.log(device.id);
+        // console.log(device.is_active);
         setDeviceId(device.id);
         setIsDeviceActive(device.is_active);
       });
@@ -100,12 +99,18 @@ function Player() {
   }, [volume]);
 
   const fetchCurrentSong = () => {
-    if (!songInfo) {
+    if (!currentTrackId && !currentSongUri) {
       console.log("fetchCurrentSong Triggered!!");
+
       // Get the User's Currently Playing Track
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        // console.log("Now Playing:", data.body?.item);
+        console.log("Now Playing:", data.body?.item);
         setCurrentTrackId(data.body?.item?.id);
+        console.log(currentTrackId);
+
+        const songUri = data.body?.item?.uri;
+        console.log({ songUri });
+        setCurrentSongUri(songUri);
 
         // Get Information About The User's Current Playback State
         spotifyApi.getMyCurrentPlaybackState().then((data) => {
@@ -116,53 +121,32 @@ function Player() {
   };
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken() && !currentTrackId && !songInfo) {
+    if (spotifyApi.getAccessToken() && !currentTrackId && !currentSongUri) {
       fetchCurrentSong();
       setVolume(50);
     }
-  }, [currentTrackIdState, spotifyApi, session]);
-
-  const fetchCurrentAlbumSong = () => {
-    if (!albumInfo) {
-      console.log("fetchCurrentAlbumSong Triggered!!");
-      // Get the User's Currently Playing Track
-      spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        console.log("Now Playing:", data.body?.item);
-        // setCurrentAlbumId(data.body?.item?.id);
-        setCurrentAlbumSongId(data.body?.item?.id);
-        // Get Information About The User's Current Playback State
-        spotifyApi.getMyCurrentPlaybackState().then((data) => {
-          setIsPlaying(data.body?.is_playing);
-        });
-      });
-    }
-  };
-
-  // useEffect(() => {
-  //   if (spotifyApi.getAccessToken() && !currentAlbumId && !albumInfo) {
-  //     //fetch song Info
-  //     fetchCurrentAlbumSong();
-  //     setVolume(50);
-  //   }
-  // }, [currentAlbumIdState, spotifyApi, session]);
+  }, [currentTrackId, currentSongUri, spotifyApi, session]);
 
   // Handle Play/Pause events if device id available and is_playing is set to true
   const handlePlayPause = () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      console.log("handlePlayPause:", data.body);
+      console.log("handlePlayPause in Player Component:", data.body);
       if (data.body?.is_playing && data.body?.device.id) {
         spotifyApi.pause();
+        setPlay(false);
         setIsPlaying(false);
       } else {
         spotifyApi.play();
+        setPlay(true);
         setIsPlaying(true);
       }
     });
   };
   return (
     <div className="h-24 grid grid-cols-3 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-black to-gray-900 text-white border-t border-gray-800">
-      <div className="flex items-center space-x-4">
-        {/* <div className=" w-10 h-10 cursor-pointer relative">
+      {songInfo ? (
+        <div className="flex items-center space-x-4">
+          {/* <div className=" w-10 h-10 cursor-pointer relative">
           <Image
             className=""
             src={songInfo?.album.images?.[0]?.url}
@@ -172,16 +156,17 @@ function Player() {
             priority
           />
         </div> */}
-        <img
-          className="hidden md:inline w-10 h-10 cursor-pointer"
-          src={songInfo?.album.images?.[0]?.url}
-          alt={songInfo?.album.name}
-        />
-        <div>
-          <h3>{songInfo?.name}</h3>
-          <p>{songInfo?.artists?.[0]?.name}</p>
+          <img
+            className="hidden md:inline w-10 h-10 cursor-pointer"
+            src={songInfo?.album.images?.[0]?.url}
+            alt={songInfo?.album.name}
+          />
+          <div>
+            <h3>{songInfo?.name}</h3>
+            <p>{songInfo?.artists?.[0]?.name}</p>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Center */}
       <div className="flex items-center justify-evenly">
