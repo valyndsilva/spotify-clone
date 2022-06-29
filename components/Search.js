@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Tracks, Poster, Artists, Playlists } from ".";
+import { Tracks, Poster, Artists, Playlists, RecentlyPlayedPoster } from ".";
 import useSpotify from "../hooks/useSpotify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Link from "next/link";
@@ -115,7 +115,7 @@ function Search() {
               title: track.name,
               uri: track.uri,
               albumUrl: track.album.images[0].url,
-              popularity: track.popularity,
+              duration: track.duration_ms,
             };
           })
         );
@@ -246,9 +246,20 @@ function Search() {
       .getMyRecentlyPlayedTracks({ limit: 20 })
       .then((res) => {
         // console.log(res.body);
-        // console.log("List of Recently Played Tracks:", res.body.items);
+        console.log("List of Recently Played Tracks:", res.body.items);
+        const duplicates = res.body.items;
+        console.log({ duplicates });
+        const unique = [];
+        duplicates.map(({ track }) =>
+          unique.filter((a) => a.track.id == track.id).length > 0
+            ? null
+            : unique.push({ track })
+        );
+
+        console.log(unique);
+
         setRecentlyPlayed(
-          res.body.items.map(({ track }) => {
+          unique.map(({ track }) => {
             setRecentlyPlayedSongs(track);
             return {
               id: track.id,
@@ -318,6 +329,61 @@ function Search() {
       <section className="bg-black ml-24 py-4 space-y-8 md:max-w-6xl flex-grow md:mr-2.5">
         {search ? (
           <>
+            <div className="grid grid-cols-12 gap-3">
+              {/* Recently Played Tracks */}
+              <div className="col-span-4">
+                <div className=" bg-[#0D0D0D] border-2 border-[#262626] p-4  rounded-xl space-y-4 mt-8">
+                  <div className="space-y-4 overflow-x-hidden h-72">
+                    {/* Search Top Artist Result */}
+                    <h2 className="text-white text-xl font-bold mb-3">
+                      Top Result
+                    </h2>
+                    <div className="grid  grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 ">
+                      {searchArtistResults.length > 0 && (
+                        <>
+                          {searchArtistResults
+                            ?.slice(0, 1)
+                            .map((artist, index) => (
+                              <div
+                                key={artist.id}
+                                className=" overflow-hidden  text-white/80 cursor-pointer hover:scale-105 hover:text-white/100 transition duration-200 ease-out group mx-auto  bg-[#0D0D0D]"
+                                //   onClick={handlePlayPause}
+                              >
+                                <img
+                                  src={artist.imageUrl}
+                                  alt={artist.name}
+                                  className="h-[150px] w-[150px] object-cover rounded-full opacity-80 group-hover:opacity-100 mx-auto  my-5 "
+                                />
+                                <div className=" inset-x-0 ml-4 flex items-center space-x-3.5  px-5">
+                                  <div className="text-[15px]">
+                                    <h4 className="font-extrabold truncate w-36">
+                                      {artist.name}
+                                    </h4>
+                                    <h6>Artist</h6>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Songs Results for search keyword */}
+              <div className="col-span-8 mb-5 mt-8 ml-2">
+                <h2 className="text-white text-xl font-bold mb-3">
+                  {searchResults.length > 0 && `Songs Result for "${search}"`}
+                </h2>
+                <div className="space-y-3 border-2 border-[#262626] rounded-2xl  bg-[#0D0D0D] overflow-y-scroll h-72 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 scrollbar-thumb-rounded hover:scrollbar-thumb-gray-500">
+                  {searchResults.length > 0 && (
+                    <Tracks tracks={searchResults} />
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Search Artists */}
             <h2 className="text-white font-bold mb-3">
               {searchArtistResults.length > 0 &&
@@ -331,12 +397,20 @@ function Search() {
 
             {/* Search Top Songs Poster */}
             <h2 className="text-white font-bold mb-3">
-              {searchResults.length === 0
-                ? "New Releases"
-                : `Top Songs Result for "${search}"`}
+              {searchResults.length && `Top Songs Result for "${search}"`}
             </h2>
             <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
               {searchResults.length > 0 && <Poster tracks={searchResults} />}
+            </div>
+
+            {/* Recently Played Tracks Poster*/}
+            <h2 className="text-white font-bold mb-3">
+              {recentlyPlayed.length > 0 && "Recently Played Songs"}
+            </h2>
+            <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
+              {recentlyPlayed.length > 0 && (
+                <RecentlyPlayedPoster tracks={recentlyPlayed} />
+              )}
             </div>
 
             <div className="grid grid-cols-12 gap-3">

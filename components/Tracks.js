@@ -13,6 +13,7 @@ import useSpotify from "../hooks/useSpotify";
 import Image from "next/image";
 import { PauseIcon, HeartIcon, PlayIcon } from "@heroicons/react/solid";
 import { playState } from "../atoms/playerAtom";
+import { millisecondsToMinutesAndSeconds } from "../lib/time";
 
 function Tracks({ tracks }) {
   console.log({ tracks });
@@ -71,7 +72,7 @@ function Tracks({ tracks }) {
   //   });
   // };
   return (
-    <div className="text-white px-8 flex-col space-y-1 pb-28">
+    <div className="text-white px-8 flex-col space-y-1">
       {tracks?.map((track, index) => (
         <div
           key={track.id}
@@ -97,7 +98,7 @@ function Tracks({ tracks }) {
           </div>
           <div className="flex items-center space-x-4">
             <div className="md:ml-auto flex items-center space-x-2.5">
-              <div className="flex items-center rounded-full border-2 border-[#262626] w-[85px] h-10 relative cursor-pointer group-hover:border-white/40">
+              {/* <div className="flex items-center rounded-full border-2 border-[#262626] w-[85px] h-10 relative cursor-pointer group-hover:border-white/40">
                 <HeartIcon
                   className={`w-5 h-5 ml-3 ${
                     hasLiked ? "text-[#1ED760]" : "text-[#868686]"
@@ -126,7 +127,8 @@ function Tracks({ tracks }) {
                     </div>
                   </>
                 )}
-              </div>
+              </div> */}
+              <p>{millisecondsToMinutesAndSeconds(track.duration)}</p>
             </div>
           </div>
         </div>

@@ -13,3 +13,4 @@ export { default as DropDown } from "./DropDown";
 export { default as Tracks } from "./Tracks";
 export { default as Poster } from "./Poster";
 export { default as Artists } from "./Artists";
+export { default as RecentlyPlayedPoster } from "./RecentlyPlayedPoster";

@@ -64,23 +64,23 @@ function Genre() {
   // New Releases...
   const fetchNewReleases = () => {
     spotifyApi
-      .getNewReleases()
+      .getNewReleases({})
       .then((res) => {
         console.log(res.body);
         console.log("List of New Releases:", res.body.albums.items);
 
-        // setNewReleases(
-        //   res.body.albums.items.map((track) => {
-        //     return {
-        //       track: track,
-        //       id: track.id,
-        //       artist: track.artists[0].name,
-        //       title: track.name,
-        //       uri: track.uri,
-        //       albumUrl: track.images[0].url,
-        //     };
-        //   })
-        // );
+        setNewReleases(
+          res.body.albums.items.map((track) => {
+            return {
+              track: track,
+              id: track.id,
+              artist: track.artists[0].name,
+              title: track.name,
+              uri: track.uri,
+              albumUrl: track.images[0].url,
+            };
+          })
+        );
       })
       .catch((error) => console.log("Something went wrong!", error));
     console.log({ newReleases });
@@ -108,7 +108,7 @@ function Genre() {
             <h2 className="text-xl font-semibold ml-10 capitalize">
               Popular playlists
             </h2>
-            <div className="grid grid-cols-3  md:grid-cols-3  lg:grid-cols-5 lg:gap-4 space-x-4 text-white p-4 ml-5">
+            <div className="grid grid-cols-3  md:grid-cols-3  lg:grid-cols-5 lg:gap-4 space-x-4 text-white p-4 ml-5 overflow-y-scroll scrollbar-hide h-72">
               {categoryPlaylists.length > 0 &&
                 categoryPlaylists.map((categoryPlaylist, index) => (
                   <div
@@ -139,7 +139,6 @@ function Genre() {
                             {categoryPlaylist?.name}
                           </h2>
                           <p className="truncate">
-                            {" "}
                             {categoryPlaylist?.description}
                           </p>
                         </div>
@@ -150,10 +149,10 @@ function Genre() {
             </div>
 
             {/* Tracks */}
-            <h2 className="text-xl font-semibold ml-10 capitalize">
+            <h2 className="text-xl font-semibold ml-10 pt-5 capitalize">
               New Releases
             </h2>
-            <div className="grid ml-5 overflow-y-scroll scrollbar-hide h-96 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
+            <div className="grid ml-5 overflow-y-scroll scrollbar-hide h-[350px] py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
               <Poster tracks={newReleases} />
             </div>
           </section>
