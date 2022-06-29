@@ -61,7 +61,7 @@ function Player() {
       let availableDevices = data.body.devices;
       // console.log(availableDevices);
       availableDevices.map((device) => {
-        // console.log({ device });
+        console.log({ device });
         // console.log(device.id);
         // console.log(device.is_active);
         setDeviceId(device.id);
@@ -71,11 +71,11 @@ function Player() {
   };
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken() && !deviceId && !isDeviceActive) {
+    if (spotifyApi.getAccessToken()) {
       //fetch Device Info
       fetchDevice();
     }
-  }, [deviceIdState, isDeviceActiveState, spotifyApi, session]);
+  }, [deviceId, isDeviceActive, spotifyApi, session]);
 
   const debouncedAdjustVolume = useCallback(
     debounce((volume) => {
@@ -104,12 +104,12 @@ function Player() {
 
       // Get the User's Currently Playing Track
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        console.log("Now Playing:", data.body?.item);
+        // console.log("Now Playing:", data.body?.item);
         setCurrentTrackId(data.body?.item?.id);
-        console.log(currentTrackId);
+        // console.log(currentTrackId);
 
         const songUri = data.body?.item?.uri;
-        console.log({ songUri });
+        // console.log({ songUri });
         setCurrentSongUri(songUri);
 
         // Get Information About The User's Current Playback State
@@ -158,8 +158,8 @@ function Player() {
         </div> */}
           <img
             className="hidden md:inline w-10 h-10 cursor-pointer"
-            src={songInfo?.album.images?.[0]?.url}
-            alt={songInfo?.album.name}
+            src={songInfo?.album?.images?.[0]?.url}
+            alt={songInfo?.album?.name}
           />
           <div>
             <h3>{songInfo?.name}</h3>

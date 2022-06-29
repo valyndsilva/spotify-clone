@@ -4,7 +4,11 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import useSpotify from "../hooks/useSpotify";
 import { useRecoilState } from "recoil";
-import { playlistIdState } from "../atoms/playlistAtom";
+import {
+  playlistIdState,
+  playlistState,
+  userPlaylistState,
+} from "../atoms/playlistAtom";
 import SidebarOption from "./SidebarOption";
 import spotifyImg from "../public/spotify.jpeg";
 import { SearchIcon, LibraryIcon, PlusIcon } from "@heroicons/react/outline";
@@ -15,20 +19,22 @@ function Sidebar() {
   // console.log(session);
   // console.log(status);
 
-  const [playlist, setPlaylist] = useState([]);
+  const [userPlaylist, setUserPlaylist] = useRecoilState(userPlaylistState);
+  // const [playlist, setPlaylist] = useRecoilState(playlistState);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   // console.log("You picked playlistId:", playlistId);
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getUserPlaylists().then((data) => {
-        setPlaylist(data.body.items);
+        // setPlaylist(data.body.items);
+        setUserPlaylist(data.body.items);
       });
     }
   }, [session, spotifyApi]);
 
   return (
-    <div className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900  h-screen overflow-y-scroll scrollbar-hide hidden  sm:max-w-[12rem] lg:max-w-[15rem] md:inline-flex md:max-w-[15rem] pb-36">
+    <div className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900  h-screen overflow-y-scroll scrollbar-hide hidden  sm:max-w-[12rem] lg:max-w-[20rem] md:inline-flex md:max-w-[18rem] pb-36">
       <div className="space-y-4">
         <div className="h-10 relative">
           <Image
@@ -73,7 +79,7 @@ function Sidebar() {
           /> */}
 
         {/* Playlists */}
-        {playlist?.map((playlist) => (
+        {userPlaylist?.map((playlist) => (
           <p
             key={playlist.id}
             onClick={() => setPlaylistId(playlist.id)}

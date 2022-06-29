@@ -11,6 +11,7 @@ import {
 import useSpotify from "../../hooks/useSpotify";
 import { Sidebar, DropDown, Player } from "../../components";
 import Link from "next/link";
+import { playlistIdState } from "../../atoms/playlistAtom";
 
 function Genre() {
   const { data: session } = useSession();
@@ -26,6 +27,7 @@ function Genre() {
     categoryPlaylistIdState
   );
   console.log({ categoryPlaylistId });
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
 
   const [categoryPlaylists, setCategoryPlaylists] = useRecoilState(
     categoryPlaylistsState
@@ -73,7 +75,10 @@ function Genre() {
               categoryPlaylists.map((categoryPlaylist, index) => (
                 <div
                   key={index}
-                  onClick={() => setCategoryPlaylistId(categoryPlaylist.id)}
+                  onClick={() => {
+                    setCategoryPlaylistId(categoryPlaylist.id);
+                    setPlaylistId(categoryPlaylist.id);
+                  }}
                 >
                   <Link
                     href={`/playlist/${encodeURIComponent(

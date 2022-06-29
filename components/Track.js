@@ -12,21 +12,11 @@ import {
 import useSpotify from "../hooks/useSpotify";
 import Image from "next/image";
 import { PauseIcon, HeartIcon, PlayIcon } from "@heroicons/react/solid";
-import { useSession } from "next-auth/react";
-import { playingTrackState, playState } from "../atoms/playerAtom";
+import { playState } from "../atoms/playerAtom";
 
-function Track({
-  track,
-  albumId,
-  albumUri,
-  albumImg,
-  albumName,
-  artistName,
-  order,
-}) {
-  const { data: session } = useSession();
+function Track({ track, order }) {
+  // console.log({ track });
   const spotifyApi = useSpotify();
-
   const [hasLiked, setHasLiked] = useState(false);
   const [currentAlbumId, setCurrentAlbumId] =
     useRecoilState(currentAlbumIdState);
@@ -43,50 +33,13 @@ function Track({
   const [currentAlbumUri, setCurrentAlbumUri] =
     useRecoilState(currentAlbumUriState);
 
-  const [currentAlbumSongId, setCurrentAlbumSongId] = useRecoilState(
-    currentAlbumSongIdState
-  );
-
-  // const handlePlay1 = () => {
-  //   console.log("handlePlay triggered in Track Component!!!!!!!!!");
-
-  //   console.log({ albumUri });
-  //   console.log({ currentAlbumUri });
-  //   console.log({ albumId });
-  //   console.log({ currentAlbumSongUri });
-  //   console.log({ currentSongUri });
-  //   if (currentAlbumSongUri === currentSongUri) {
-  //     setPlay(!play);
-  //   }
-
-  //   setCurrentAlbumId(albumId); // triggers useSongInfo
-  //   setIsPlaying(true);
-  // spotifyApi.play({
-  //   uris: [currentAlbumSongUri],
-  // });
-  //   console.log({
-  //     track,
-  //     albumId,
-  //     albumUri,
-  //     artistName,
-  //     albumName,
-  //     currentSongUri,
-  //   });
-  //   // }
-  // };
-
   const [play, setPlay] = useRecoilState(playState);
-  const [playingTrack, setPlayingTrack] = useRecoilState(playingTrackState);
-
-  // const chooseTrack = (track) => {
-  //   setPlayingTrack(track);
-  // };
 
   const handlePlayPause = () => {
     console.log(" handlePlay1 triggered!!!!!!!!!");
-    setCurrentAlbumId(albumId); // triggers useSongInfo
+    setCurrentAlbumId(track.id); // triggers useSongInfo
     // chooseTrack(track);
-    console.log({ albumId });
+    console.log(track.id);
     console.log(currentSongUri);
     console.log(currentAlbumSongUri);
 
@@ -107,25 +60,35 @@ function Track({
     });
   };
 
+  // const handlePlayPause = () => {
+  //   setCurrentAlbumId(track.id); // triggers useSongInfo
+  //   spotifyApi.getMyCurrentPlaybackState().then((data) => {
+  //     console.log("handlePlayPause in Track Component:", data.body);
+  //     setIsPlaying(true);
+  //     spotifyApi.play({
+  //       uris: [currentSongUri],
+  //     });
+  //   });
+  // };
   return (
     <div
       className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
-      // onClick={handlePlay1}
+      // onClick={handlePlayPause}
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>
         <div className="w-12 h-12 relative">
           <Image
-            src={albumImg}
-            alt={albumName}
+            src={track.albumUrl}
+            alt={track.title}
             layout="fill" // required
             objectFit="cover" // change to suit your needs
             priority
           />
         </div>
         <div className="flex-col">
-          <p className="text-white w-36 lg:w-64 truncate">{albumName}</p>
-          <p className="w-40">{artistName}</p>
+          <p className="text-white w-36 lg:w-64 truncate">{track.title}</p>
+          <p className="w-40">{track.artist}</p>
         </div>
       </div>
       <div className="flex items-center space-x-4">
@@ -137,8 +100,7 @@ function Track({
               }`}
               onClick={() => setHasLiked(!hasLiked)}
             />
-            {/* {isPlaying ? ( */}
-            {/* {currentSongUri && isPlaying && play ? ( */}
+
             {track.uri === currentAlbumUri && play ? (
               <>
                 <div

@@ -29,7 +29,8 @@ function Home() {
   const [color, setColor] = useState(null);
 
   const playlistId = useRecoilValue(playlistIdState);
-  const [playlist, setPlaylist] = useRecoilState(playlistState);
+  // const [playlist, setPlaylist] = useRecoilState(playlistState);
+  const [playlist, setPlaylist] = useState([]);
   const [playlistSongs, setPlaylistSongs] = useRecoilState(playlistSongsState);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ function Home() {
           setPlaylist(playlistData);
 
           const playlistSongsData = data.body.tracks.items;
-          console.log(playlistSongsData);
+          // console.log(playlistSongsData);
           setPlaylistSongs(playlistSongsData);
         })
         .catch((error) =>
@@ -66,9 +67,9 @@ function Home() {
     }
   }, [playlistId, spotifyApi, session]);
 
-  console.log({ playlistId });
-  console.log({ playlist });
-  // console.log(playlistSongs);
+  // console.log({ playlistId });
+  // console.log({ playlist });
+  // console.log({ playlistSongs });
   return (
     <div className="flex-grow text-white h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
@@ -78,7 +79,7 @@ function Home() {
         className={`flex items-end space-x-7 bg-gradient-to-b to-black ${color} h-80 text-white p-8`}
       >
         <div className="w-44 h-44 shadow-2xl rounded cursor-pointer relative">
-          {playlist && (
+          {/* {playlist && (
             <Image
               // src={playlist?.images?.[0]?.url}
               src={playlist.imageUrl}
@@ -87,7 +88,8 @@ function Home() {
               objectFit="cover" // change to suit your needs
               priority
             />
-          )}
+          )} */}
+          <img src={playlist.imageUrl} alt={playlist.name} />
         </div>
         <div>
           <p>PLAYLIST</p>

@@ -5,6 +5,11 @@ export const songInfoState = atom({
   default: null, // default value (initial value)
 });
 
+export const likedSongInfoState = atom({
+  key: "likedSongInfoState", //unique ID(with respect to other atom/selectors)
+  default: null, // default value (initial value)
+});
+
 export const albumInfoState = atom({
   key: "albumInfoState", //unique ID(with respect to other atom/selectors)
   default: null, // default value (initial value)

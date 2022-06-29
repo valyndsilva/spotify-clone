@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Sidebar, Home } from "../../components";
+import { Sidebar, Liked ,Player} from "../../components";
 
 const Tracks = () => {
   return (
@@ -11,8 +11,11 @@ const Tracks = () => {
 
       <main className="flex">
         <Sidebar />
-        <Home />
+        <Liked />
       </main>
+      <div className="sticky bottom-0">
+        <Player />
+      </div>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { set } from "lodash";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -10,6 +11,7 @@ import {
   currentAlbumIdState,
   currentAlbumSongIdState,
   currentAlbumUriState,
+  likedSongInfoState,
 } from "../atoms/songAtom";
 import useSpotify from "./useSpotify";
 
@@ -18,6 +20,7 @@ function useSongInfo() {
   const spotifyApi = useSpotify();
 
   const [songInfo, setSongInfo] = useRecoilState(songInfoState);
+  const [likedSongInfo, setLikedSongInfo] = useRecoilState(likedSongInfoState);
 
   const [albumInfo, setAlbumInfo] = useRecoilState(albumInfoState);
 
@@ -67,10 +70,10 @@ function useSongInfo() {
   };
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken() && currentTrackId) {
+    if (spotifyApi.getAccessToken() && currentTrackId && currentSongUri) {
       fetchSongInfo();
     }
-  }, [currentTrackId, spotifyApi, session]);
+  }, [currentTrackId, currentSongUri, spotifyApi, session]);
 
   const fetchAlbumInfo = async () => {
     const albumInfo = await fetch(
@@ -106,6 +109,26 @@ function useSongInfo() {
       fetchAlbumInfo();
     }
   }, [currentAlbumId, spotifyApi, session]);
+
+  const fetchLikedSongInfo = async () => {
+    const LikedSongInfo = await fetch(`https://api.spotify.com/v1/me/tracks`, {
+      headers: {
+        //When you make a request to an API endpoint that access token is put inside the header.
+        // We can pass around the access token as a bearer with the token.
+        Accept: "application/json",
+        Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+      },
+    }).then((res) => res.json());
+    console.log("fetchLikedSongInfo triggered!!!!!!!!!");
+    console.log({ LikedSongInfo });
+    setLikedSongInfo(LikedSongInfo);
+  };
+
+  useEffect(() => {
+    if (spotifyApi.getAccessToken()) {
+      fetchLikedSongInfo();
+    }
+  }, [spotifyApi, session]);
 
   return songInfo;
 }

@@ -14,16 +14,7 @@ function Tracks({ tracks }) {
   return (
     <div className="text-white px-8 flex-col space-y-1 pb-28">
       {tracks?.map((track, index) => (
-        <Track
-          key={track.id}
-          order={index}
-          track={track}
-          albumId={track.id}
-          albumUri={track.uri}
-          albumImg={track.albumUrl}
-          albumName={track.title}
-          artistName={track.artist}
-        />
+        <Track key={track.id} order={index} track={track} />
       ))}
     </div>
   );

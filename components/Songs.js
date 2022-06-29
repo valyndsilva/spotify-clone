@@ -2,9 +2,10 @@ import React from "react";
 import Song from "./Song";
 
 function Songs({ tracks }) {
+  // console.log(tracks);
   return (
     <div className="text-white px-8 flex-col space-y-1 pb-28">
-      {tracks.map((track, index) => (
+      {tracks?.map((track, index) => (
         <Song
           key={track.track.id}
           order={index}

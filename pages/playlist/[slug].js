@@ -63,7 +63,7 @@ function Playlist() {
             className={`flex items-end space-x-7 bg-gradient-to-b to-black ${color} h-80 text-white p-8`}
           >
             <div className="w-44 h-44 shadow-2xl rounded cursor-pointer relative">
-              {playlist && (
+              {/* {playlist && (
                 <Image
                   src={playlist?.images?.[0]?.url}
                   alt="logo"
@@ -71,17 +71,19 @@ function Playlist() {
                   objectFit="cover" // change to suit your needs
                   priority
                 />
-              )}
+              )} */}
+              <img src={playlist?.images?.[0]?.url} alt={playlist.name} />
             </div>
             <div>
               <p>Playlists</p>
               <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
                 {playlist?.name}
               </h1>
+              <p>{playlist?.description}</p>
             </div>
           </section>
           <div>
-            <Songs />
+            <Songs tracks={playlist?.tracks?.items} />
           </div>
         </main>
       </div>
