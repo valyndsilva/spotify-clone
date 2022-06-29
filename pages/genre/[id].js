@@ -9,9 +9,10 @@ import {
   categoryPlaylistIdState,
 } from "../../atoms/categoryAtom";
 import useSpotify from "../../hooks/useSpotify";
-import { Sidebar, DropDown, Player } from "../../components";
+import { Sidebar, DropDown, Player, Poster } from "../../components";
 import Link from "next/link";
 import { playlistIdState } from "../../atoms/playlistAtom";
+import { newReleasesState } from "../../atoms/searchAtom";
 
 function Genre() {
   const { data: session } = useSession();
@@ -33,6 +34,8 @@ function Genre() {
     categoryPlaylistsState
   );
   console.log({ categoryPlaylists });
+
+  const [newReleases, setNewReleases] = useRecoilState(newReleasesState);
 
   const fetchCategoryPlaylists = () => {
     // Get Playlists for a Category
@@ -58,6 +61,37 @@ function Genre() {
     }
   }, [categoryIdState, categoryNameState, spotifyApi, session]);
 
+  // New Releases...
+  const fetchNewReleases = () => {
+    spotifyApi
+      .getNewReleases()
+      .then((res) => {
+        console.log(res.body);
+        console.log("List of New Releases:", res.body.albums.items);
+
+        // setNewReleases(
+        //   res.body.albums.items.map((track) => {
+        //     return {
+        //       track: track,
+        //       id: track.id,
+        //       artist: track.artists[0].name,
+        //       title: track.name,
+        //       uri: track.uri,
+        //       albumUrl: track.images[0].url,
+        //     };
+        //   })
+        // );
+      })
+      .catch((error) => console.log("Something went wrong!", error));
+    console.log({ newReleases });
+  };
+  useEffect(() => {
+    if (spotifyApi.getAccessToken()) {
+      //fetch New Releases
+      fetchNewReleases();
+    }
+  }, [spotifyApi, session]);
+
   return (
     <div className="bg-black h-screen overflow-hidden">
       <div className="flex text-white">
@@ -67,44 +101,61 @@ function Genre() {
             <DropDown />
           </header>
 
-          <h1 className="text-8xl font-semibold capitalize p-8">
-            {categoryName}
-          </h1>
-          <section className="grid grid-cols-3  md:grid-cols-3  lg:grid-cols-7 lg:gap-4 space-x-4 text-white p-8">
-            {categoryPlaylists.length > 0 &&
-              categoryPlaylists.map((categoryPlaylist, index) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    setCategoryPlaylistId(categoryPlaylist.id);
-                    setPlaylistId(categoryPlaylist.id);
-                  }}
-                >
-                  <Link
-                    href={`/playlist/${encodeURIComponent(
-                      categoryPlaylist.id
-                    )}`}
-                    className=""
+          <section className="bg-black ml-10 py-4 space-y-2 md:max-w-6xl flex-grow md:mr-2.5">
+            <h1 className="text-8xl font-bold capitalize p-8">
+              {categoryName}
+            </h1>
+            <h2 className="text-xl font-semibold ml-10 capitalize">
+              Popular playlists
+            </h2>
+            <div className="grid grid-cols-3  md:grid-cols-3  lg:grid-cols-5 lg:gap-4 space-x-4 text-white p-4 ml-5">
+              {categoryPlaylists.length > 0 &&
+                categoryPlaylists.map((categoryPlaylist, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setCategoryPlaylistId(categoryPlaylist.id);
+                      setPlaylistId(categoryPlaylist.id);
+                    }}
                   >
-                    <div className="space-y-2 my-4">
-                      <div className="w-44 h-44 shadow-2xl rounded cursor-pointer relative">
-                        <Image
-                          src={categoryPlaylist?.images?.[0]?.url}
-                          layout="fill" // required
-                          objectFit="cover" // change to suit your needs
-                          priority
-                        />
+                    <Link
+                      href={`/playlist/${encodeURIComponent(
+                        categoryPlaylist.id
+                      )}`}
+                      className=""
+                    >
+                      <div className="space-y-2 my-4">
+                        <div className="w-44 h-44 shadow-2xl rounded-md cursor-pointer relative">
+                          <Image
+                            src={categoryPlaylist?.images?.[0]?.url}
+                            layout="fill" // required
+                            objectFit="cover" // change to suit your needs
+                            priority
+                            className="shadow-2xl rounded-md"
+                          />
+                        </div>
+                        <div className="">
+                          <h2 className="truncate text-sm md:text-md xl:text-xl font-bold">
+                            {categoryPlaylist?.name}
+                          </h2>
+                          <p className="truncate">
+                            {" "}
+                            {categoryPlaylist?.description}
+                          </p>
+                        </div>
                       </div>
-                      <div className="">
-                        <h2 className="text-sm md:text-md xl:text-xl font-bold">
-                          {categoryPlaylist?.name}
-                        </h2>
-                        <p> {categoryPlaylist?.description}</p>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              ))}
+                    </Link>
+                  </div>
+                ))}
+            </div>
+
+            {/* Tracks */}
+            <h2 className="text-xl font-semibold ml-10 capitalize">
+              New Releases
+            </h2>
+            <div className="grid ml-5 overflow-y-scroll scrollbar-hide h-96 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
+              <Poster tracks={newReleases} />
+            </div>
           </section>
         </main>
       </div>

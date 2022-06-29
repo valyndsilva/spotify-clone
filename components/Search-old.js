@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Tracks, Results, Artists, Playlists } from ".";
+import { Tracks, Poster, Artists, Playlists } from ".";
 import useSpotify from "../hooks/useSpotify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Link from "next/link";
@@ -316,7 +316,7 @@ function Search() {
       <Header />
 
       <section className="bg-black ml-24 py-4 space-y-8 md:max-w-6xl flex-grow md:mr-2.5">
-      {/* {search ? () : ()} */}
+        {/* {search ? () : ()} */}
         {/* Search Playlists */}
         <h2 className="text-white font-bold mb-3">
           {searchPlaylistResults.length === 0
@@ -348,9 +348,9 @@ function Search() {
         {/* Search Tracks Results */}
         <div className="grid overflow-y-scroll scrollbar-hide h-72 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8 p-4">
           {searchTrackResults.length === 0 ? (
-            <Results tracks={newReleases} />
+            <Poster tracks={newReleases} />
           ) : (
-            <Results tracks={searchResults} />
+            <Poster tracks={searchResults} />
           )}
         </div>
 

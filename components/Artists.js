@@ -1,6 +1,5 @@
 import { PlayIcon } from "@heroicons/react/solid";
 import React from "react";
-import Result from "./Result";
 
 function Artists({ artists }) {
   console.log({ artists });

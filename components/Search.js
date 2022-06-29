@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Tracks, Results, Artists, Playlists } from ".";
+import { Tracks, Poster, Artists, Playlists } from ".";
 import useSpotify from "../hooks/useSpotify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Link from "next/link";
@@ -34,7 +34,7 @@ function Search() {
   const spotifyApi = useSpotify();
 
   const [categories, setCategories] = useRecoilState(categoriesState);
-  console.log(categories);
+  // console.log(categories);
 
   const [categoryId, setCategoryId] = useRecoilState(categoryIdState);
   const [categoryName, setCategoryName] = useRecoilState(categoryNameState);
@@ -97,7 +97,7 @@ function Search() {
 
   // Searching...
   const fetchSearchResults = () => {
-    if (!search) return setSearchTrackResults([]);
+    if (!search) return setSearchResults([]);
     let cancel = false;
 
     spotifyApi
@@ -106,9 +106,10 @@ function Search() {
         if (cancel) return;
         console.log("Search Results:", res.body);
         console.log("Search Results:", res.body.tracks.items);
-        setSearchTrackResults(
+        setSearchResults(
           res.body.tracks.items.map((track) => {
             return {
+              track: track,
               id: track.id,
               artist: track.artists[0].name,
               title: track.name,
@@ -174,7 +175,6 @@ function Search() {
 
         setNewReleases(
           res.body.albums.items.map((track) => {
-            setNewReleasesPlaylistSongs(track);
             return {
               id: track.id,
               artist: track.artists[0].name,
@@ -246,7 +246,7 @@ function Search() {
       .getMyRecentlyPlayedTracks({ limit: 20 })
       .then((res) => {
         // console.log(res.body);
-        console.log("List of Recently Played Tracks:", res.body.items);
+        // console.log("List of Recently Played Tracks:", res.body.items);
         setRecentlyPlayed(
           res.body.items.map(({ track }) => {
             setRecentlyPlayedSongs(track);
@@ -329,18 +329,24 @@ function Search() {
               )}
             </div>
 
+            {/* Search Top Songs Poster */}
+            <h2 className="text-white font-bold mb-3">
+              {searchResults.length === 0
+                ? "New Releases"
+                : `Top Songs Result for "${search}"`}
+            </h2>
+            <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
+              {searchResults.length > 0 && <Poster tracks={searchResults} />}
+            </div>
+
             <div className="grid grid-cols-12 gap-3">
               {/* Tracks */}
               <div className="col-span-8 mb-5">
                 <h2 className="text-white font-bold mb-3">
-                  {searchResults.length === 0
-                    ? "New Releases"
-                    : `Songs Result for "${search}"`}
+                  {searchResults.length > 0 && `Songs Result for "${search}"`}
                 </h2>
                 <div className="space-y-3 border-2 border-[#262626] rounded-2xl p-3 bg-[#0D0D0D] overflow-y-scroll h-72 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 scrollbar-thumb-rounded hover:scrollbar-thumb-gray-500">
-                  {searchResults.length === 0 ? (
-                    <Tracks tracks={newReleases} />
-                  ) : (
+                  {searchResults.length > 0 && (
                     <Tracks tracks={searchResults} />
                   )}
                 </div>
@@ -371,20 +377,6 @@ function Search() {
               </div>
             </div>
 
-            {/* Search Top Songs Poster */}
-            <h2 className="text-white font-bold mb-3">
-              {searchResults.length === 0
-                ? "New Releases"
-                : `Top Songs Result for "${search}"`}
-            </h2>
-            <div className="grid overflow-y-scroll scrollbar-hide h-72 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8 p-4">
-              {searchTrackResults.length === 0 ? (
-                <Results tracks={newReleases} />
-              ) : (
-                <Results tracks={searchTrackResults} />
-              )}
-            </div>
-
             {/* Search Playlists */}
             <h2 className="text-white font-bold">
               {searchPlaylistResults.length > 0 &&
@@ -404,13 +396,13 @@ function Search() {
               {categories &&
                 categories.map((cate, index) => (
                   <Link
+                    key={index}
                     href={{
                       pathname: "/genre/[id]",
                       query: { id: cate.id + "-page" },
                     }}
                   >
                     <div
-                      key={index}
                       className={`rounded-lg cursor-pointer bg-gradient-to-b to-black ${
                         colors[index % colors.length]
                       } h-[200px]  relative overflow-hidden`}
