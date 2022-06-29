@@ -13,3 +13,27 @@ export const searchResultsState = atom({
   key: "searchResultsState",
   default: "",
 });
+
+export const searchTrackResultsState = atom({
+  key: "searchTrackResultsState",
+  default: "",
+});
+
+export const searchArtistResultsState = atom({
+  key: "searchArtistResultsState",
+  default: "",
+});
+
+export const topArtistResultsState = atom({
+  key: "topArtistResultsState",
+  default: [],
+});
+export const featuredPlaylistsResultsState = atom({
+  key: "featuredPlaylistsResultsState",
+  default: [],
+});
+
+export const searchPlaylistResultsState = atom({
+  key: "searchPlaylistResultsState",
+  default: "",
+});
