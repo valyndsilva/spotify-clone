@@ -49,3 +49,4 @@ export const isPlayingState = atom({
   key: "isPlayingState",
   default: false,
 });
+

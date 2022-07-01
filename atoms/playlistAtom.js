@@ -20,6 +20,11 @@ export const recentlyPlayedSongsState = atom({
   key: "recentlyPlayedSongsState",
   default: [],
 });
+export const recentlyPlayedState = atom({
+  key: "recentlyPlayedState",
+  default: [],
+});
+
 export const playlistIdState = atom({
   key: "playlistIdState",
   default: "37i9dQZF1DXcBWIGoYBM5M",

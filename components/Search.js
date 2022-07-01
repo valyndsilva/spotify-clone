@@ -26,6 +26,7 @@ import RecentlyPlayed from "./RecentlyPlayed";
 import {
   newReleasesPlaylistSongsState,
   recentlyPlayedSongsState,
+  recentlyPlayedState,
 } from "../atoms/playlistAtom";
 import Header from "./Header";
 import { shuffle } from "lodash";
@@ -62,7 +63,8 @@ function Search() {
   );
 
   const [newReleases, setNewReleases] = useRecoilState(newReleasesState);
-  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  const [recentlyPlayed, setRecentlyPlayed] =
+    useRecoilState(recentlyPlayedState);
 
   const [newReleasesPlaylistSongs, setNewReleasesPlaylistSongs] =
     useRecoilState(newReleasesPlaylistSongsState);
@@ -377,9 +379,10 @@ function Search() {
                   {searchResults.length > 0 && `Songs Result for "${search}"`}
                 </h2>
                 <div className="space-y-3 border-2 border-[#262626] rounded-2xl  bg-[#0D0D0D] overflow-y-scroll h-72 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 scrollbar-thumb-rounded hover:scrollbar-thumb-gray-500">
-                  {searchResults.length > 0 && (
-                    <Tracks tracks={searchResults} />
-                  )}
+                  {searchResults.length > 0 &&
+                    searchResults.map((track, index) => (
+                      <Tracks track={track} order={index} />
+                    ))}
                 </div>
               </div>
             </div>
@@ -400,7 +403,8 @@ function Search() {
               {searchResults.length && `Top Songs Result for "${search}"`}
             </h2>
             <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
-              {searchResults.length > 0 && <Poster tracks={searchResults} />}
+              {searchResults.length > 0 &&
+                searchResults.map((track) => <Poster track={track} />)}
             </div>
 
             {/* Recently Played Tracks Poster*/}
@@ -408,9 +412,10 @@ function Search() {
               {recentlyPlayed.length > 0 && "Recently Played Songs"}
             </h2>
             <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
-              {recentlyPlayed.length > 0 && (
-                <RecentlyPlayedPoster tracks={recentlyPlayed} />
-              )}
+              {recentlyPlayed.length>0 &&
+                recentlyPlayed.map((track) => (
+                  <RecentlyPlayedPoster track={track} />
+                ))}
             </div>
 
             <div className="grid grid-cols-12 gap-3">
@@ -420,9 +425,10 @@ function Search() {
                   {searchResults.length > 0 && `Songs Result for "${search}"`}
                 </h2>
                 <div className="space-y-3 border-2 border-[#262626] rounded-2xl p-3 bg-[#0D0D0D] overflow-y-scroll h-72 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 scrollbar-thumb-rounded hover:scrollbar-thumb-gray-500">
-                  {searchResults.length > 0 && (
-                    <Tracks tracks={searchResults} />
-                  )}
+                  {searchResults.length > 0 &&
+                    searchResults.map((track, index) => (
+                      <Tracks track={track} order={index} />
+                    ))}
                 </div>
               </div>
 

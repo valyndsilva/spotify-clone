@@ -120,7 +120,7 @@ function useSongInfo() {
       },
     }).then((res) => res.json());
     console.log("fetchLikedSongInfo triggered!!!!!!!!!");
-    console.log({ LikedSongInfo });
+    // console.log({ LikedSongInfo });
     setLikedSongInfo(LikedSongInfo);
   };
 
@@ -129,6 +129,40 @@ function useSongInfo() {
       fetchLikedSongInfo();
     }
   }, [spotifyApi, session]);
+
+  const fetchNextSongInfo = async () => {
+    const NextSongInfo = await fetch(
+      `https://api.spotify.com/v1/me/player/next`,
+      {
+        headers: {
+          //When you make a request to an API endpoint that access token is put inside the header.
+          // We can pass around the access token as a bearer with the token.
+          Accept: "application/json",
+          Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+        },
+      }
+    ).then((res) => res.json());
+    console.log("fetchNextSongInfo triggered!!!!!!!!!");
+    console.log({ NextSongInfo });
+    setNextSongInfo(NextSongInfo);
+  };
+
+  const fetchPreviousSongInfo = async () => {
+    const PreviousSongInfo = await fetch(
+      `https://api.spotify.com/v1/me/player/previous`,
+      {
+        headers: {
+          //When you make a request to an API endpoint that access token is put inside the header.
+          // We can pass around the access token as a bearer with the token.
+          Accept: "application/json",
+          Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+        },
+      }
+    ).then((res) => res.json());
+    console.log("fetchPreviousSongInfo triggered!!!!!!!!!");
+    console.log({ PreviousSongInfo });
+    setPreviousSongInfo(PreviousSongInfo);
+  };
 
   return songInfo;
 }

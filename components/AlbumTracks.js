@@ -11,30 +11,14 @@ import {
 } from "../atoms/songAtom";
 import useSpotify from "../hooks/useSpotify";
 import Image from "next/image";
-import { PauseIcon, HeartIcon, PlayIcon } from "@heroicons/react/solid";
-import { playState } from "../atoms/playerAtom";
 import { millisecondsToMinutesAndSeconds } from "../lib/time";
 
-function Tracks({ track, order }) {
-  // console.log({ track });
+function AlbumTracks({ track, order, albumUrl }) {
+  console.log({ track });
   const spotifyApi = useSpotify();
-  const [hasLiked, setHasLiked] = useState(false);
-  const [currentAlbumId, setCurrentAlbumId] =
-    useRecoilState(currentAlbumIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-  const [currentSongUri, setCurrentSongUri] =
-    useRecoilState(currentSongUriState);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
-
-  const [currentAlbumSongUri, setCurrentAlbumSongUri] = useRecoilState(
-    currentAlbumSongUriState
-  );
-
-  const [currentAlbumUri, setCurrentAlbumUri] =
-    useRecoilState(currentAlbumUriState);
-
-  const [play, setPlay] = useRecoilState(playState);
 
   const handlePlayPause = () => {
     console.log({ track });
@@ -49,9 +33,8 @@ function Tracks({ track, order }) {
   };
 
   return (
-    <div className="text-white px-8 flex-col space-y-1">
+    <div key={track.id} className="text-white px-8 flex-col space-y-1">
       <div
-        key={track.id}
         className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
         onClick={handlePlayPause}
       >
@@ -59,21 +42,21 @@ function Tracks({ track, order }) {
           <p>{order + 1}</p>
           <div className="w-12 h-12 relative">
             <Image
-              src={track.albumUrl}
-              alt={track.title}
+              src={albumUrl}
+              alt={track.name}
               layout="fill" // required
               objectFit="cover" // change to suit your needs
               priority
             />
           </div>
           <div className="flex-col">
-            <p className="text-white w-36 lg:w-64 truncate">{track.title}</p>
-            <p className="w-40">{track.artist}</p>
+            <p className="text-white w-36 lg:w-64 truncate">{track.name}</p>
+            <p className="w-40">{track.artists[0].name}</p>
           </div>
         </div>
         <div className="flex items-center space-x-4">
           <div className="md:ml-auto flex items-center space-x-2.5">
-            <p>{millisecondsToMinutesAndSeconds(track.duration)}</p>
+            <p>{millisecondsToMinutesAndSeconds(track.duration_ms)}</p>
           </div>
         </div>
       </div>
@@ -81,4 +64,4 @@ function Tracks({ track, order }) {
   );
 }
 
-export default Tracks;
+export default AlbumTracks;

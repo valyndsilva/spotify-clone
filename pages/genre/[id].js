@@ -153,7 +153,8 @@ function Genre() {
               New Releases
             </h2>
             <div className="grid ml-5 overflow-y-scroll scrollbar-hide h-[350px] py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
-              <Poster tracks={newReleases} />
+              {newReleases.length > 0 &&
+                newReleases.map((track) => <Poster track={track} />)}
             </div>
           </section>
         </main>

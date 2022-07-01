@@ -1,14 +1,8 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import userImg from "../public/spotify-img.png";
-import { useSession, signOut } from "next-auth/react";
-import { ChevronDownIcon } from "@heroicons/react/outline";
-import { shuffle } from "lodash";
+import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { playlistIdState, playlistState } from "../atoms/playlistAtom";
-import useSpotify from "../hooks/useSpotify";
 import { Songs, DropDown, Player } from "./";
-import { likedSongInfoState } from "../atoms/songAtom";
+import { isPlayingState, likedSongInfoState } from "../atoms/songAtom";
 import likedImg from "../public/liked.png";
 import { DotsHorizontalIcon, PlayIcon } from "@heroicons/react/solid";
 

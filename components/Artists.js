@@ -6,7 +6,7 @@ function Artists({ artists }) {
 
   return (
     <>
-      {artists?.map((artist, index) => (
+      {artists?.map((artist) => (
         <div
           key={artist.id}
           className="w-[200px] h-[250px] overflow-hidden relative text-white/80 cursor-pointer hover:scale-105 hover:text-white/100 transition duration-200 ease-out group mx-auto  bg-[#0D0D0D]"

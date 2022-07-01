@@ -105,7 +105,10 @@ function Home() {
           <HeartIcon className=" w-10 h-10" />
           <DotsHorizontalIcon className=" w-10 h-10" />
         </div>
-        <Songs tracks={playlistSongs} />
+        {playlistSongs.length > 0 &&
+          playlistSongs.map((track, index) => (
+            <Songs track={track} order={index} />
+          ))}
       </div>
     </div>
   );

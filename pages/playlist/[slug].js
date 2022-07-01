@@ -83,6 +83,7 @@ function Playlist() {
             </div>
           </section>
           <div>
+            {/* <Songs tracks={playlist?.tracks?.items} /> */}
             <Songs tracks={playlist?.tracks?.items} />
           </div>
         </main>
@@ -94,12 +95,4 @@ function Playlist() {
   );
 }
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context); // prefetches session info so it can use the info before hand. Ex: render the playlist image in MainView.js
-  return {
-    props: {
-      session,
-    },
-  };
-}
 export default Playlist;
