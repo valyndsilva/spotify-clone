@@ -14,7 +14,11 @@ function Playlists({ playlists }) {
   return (
     <>
       {playlists?.map((playlist) => (
-        <Link href={`/playlist/${encodeURIComponent(playlist.id)}`}>
+        <Link 
+        href={{
+            pathname: "/playlist/[id]",
+            query: { id: playlist.id },
+          }}>
           <div
             key={playlist.id}
             onClick={() => {

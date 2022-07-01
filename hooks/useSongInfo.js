@@ -118,10 +118,11 @@ function useSongInfo() {
         Accept: "application/json",
         Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
       },
-    }).then((res) => res.json());
+      }).then((data) => data.json());
+   
     console.log("fetchLikedSongInfo triggered!!!!!!!!!");
-    // console.log({ LikedSongInfo });
-    setLikedSongInfo(LikedSongInfo);
+    console.log( LikedSongInfo.items );
+    setLikedSongInfo(LikedSongInfo.items);
   };
 
   useEffect(() => {

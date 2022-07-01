@@ -30,6 +30,7 @@ import {
   PlayIcon,
 } from "@heroicons/react/solid";
 import { HeartIcon } from "@heroicons/react/outline";
+import { numberWithCommas } from "../../lib/numberWithCommas";
 
 function Artist() {
   const { data: session } = useSession();
@@ -53,7 +54,7 @@ function Artist() {
 
   useEffect(() => {
     setArtistId(router.query.id);
-  }, []);
+  }, [router.query.id]);
 
   const fetchSingleArtist = () => {
     // Get an artist
@@ -106,7 +107,7 @@ function Artist() {
     spotifyApi
       .getArtistTopTracks(artistId, "GB")
       .then((data) => {
-        // console.log("Artists Top Tracks", data.body);
+        console.log("Artists Top Tracks", data.body);
         setArtistTopTracks(
           data.body.tracks.map((track) => {
             return {
@@ -116,6 +117,7 @@ function Artist() {
               title: track.name,
               uri: track.uri,
               albumUrl: track.album.images[0].url,
+              albumName: track.album.name,
               duration: track.duration_ms,
               followers: track.followers?.total,
               imageUrl: track.images?.[0].url,
@@ -161,9 +163,7 @@ function Artist() {
   useEffect(() => {
     setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
   }, []);
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
+
   return (
     <div className="bg-black h-screen overflow-hidden">
       <div className="flex text-white">
@@ -177,7 +177,7 @@ function Artist() {
             className={`flex items-end space-x-7 bg-gradient-to-b to-black ${color} h-80 text-white p-8`}
           >
             <div className="w-56 h-56 cursor-pointer relative">
-              {singleArtist && (
+              {/* {singleArtist && (
                 <Image
                   src={singleArtist.imageUrl}
                   alt={singleArtist.name}
@@ -186,7 +186,8 @@ function Artist() {
                   priority
                   className="shadow-2xl rounded-full "
                 />
-              )}
+              )} */}
+              <img src={singleArtist.imageUrl} alt={singleArtist.name} />
             </div>
             <div className="ml-10 space-y-2 ">
               <span className="text-sm font-light flex items-center">
@@ -197,7 +198,7 @@ function Artist() {
                 {singleArtist.name}
               </h1>
               <p className="text-xl font-light ml-2">
-                {numberWithCommas(singleArtist.followers)} monthly listeners
+                {singleArtist.followers} monthly listeners
               </p>
             </div>
           </section>

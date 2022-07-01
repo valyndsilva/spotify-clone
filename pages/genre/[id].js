@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -13,8 +13,23 @@ import { Sidebar, DropDown, Player, Poster } from "../../components";
 import Link from "next/link";
 import { playlistIdState } from "../../atoms/playlistAtom";
 import { newReleasesState } from "../../atoms/searchAtom";
-
+import { shuffle } from "lodash";
 function Genre() {
+  const colors = [
+    "from-indigo-500",
+    "from-blue-500",
+    "from-green-500",
+    "from-red-500",
+    "from-yellow-500",
+    "from-pink-500",
+    "from-purple-500",
+  ];
+
+  const [color, setColor] = useState(null);
+  useEffect(() => {
+    setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
+  }, [categoryPlaylistId]);
+
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
 
@@ -97,11 +112,14 @@ function Genre() {
       <div className="flex text-white">
         <Sidebar />
         <main className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
-          <header className="grid justify-items-end p-8">
-            <DropDown />
+          <header className="absolute top-5 right-8">
+            <DropDown className="absolute top-5 right-8" />
           </header>
 
-          <section className="bg-black ml-10 py-4 space-y-2 md:max-w-6xl flex-grow md:mr-2.5">
+          {/* <section className="bg-red-500 ml-10 py-4 space-y-2 md:max-w-6xl flex-grow md:mr-2.5"> */}
+          <section
+            className={` bg-gradient-to-b to-black ${color} h-80 text-white p-8  max-w-7xl`}
+          >
             <h1 className="text-8xl font-bold capitalize p-8">
               {categoryName}
             </h1>
@@ -119,10 +137,10 @@ function Genre() {
                     }}
                   >
                     <Link
-                      href={`/playlist/${encodeURIComponent(
-                        categoryPlaylist.id
-                      )}`}
-                      className=""
+                      href={{
+                        pathname: "/playlist/[id]",
+                        query: { id: categoryPlaylist.id },
+                      }}
                     >
                       <div className="space-y-2 my-4">
                         <div className="w-44 h-44 shadow-2xl rounded-md cursor-pointer relative">

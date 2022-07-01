@@ -14,6 +14,7 @@ import Image from "next/image";
 import { PauseIcon, HeartIcon, PlayIcon } from "@heroicons/react/solid";
 import { playState } from "../atoms/playerAtom";
 import { millisecondsToMinutesAndSeconds } from "../lib/time";
+import Link from "next/link";
 
 function Tracks({ track, order }) {
   // console.log({ track });
@@ -36,7 +37,7 @@ function Tracks({ track, order }) {
 
   const [play, setPlay] = useRecoilState(playState);
 
-  const handlePlayPause = () => {
+  const handlePlay = () => {
     console.log({ track });
 
     console.log(" handlePlay1 triggered!!!!!!!!!");
@@ -49,10 +50,10 @@ function Tracks({ track, order }) {
   };
 
   return (
-    <div key={track.id} className="text-white px-8 flex-col space-y-1">
+    <div key={track.id} className="text-white px-8 flex-col space-y-1 group">
       <div
         className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
-        onClick={handlePlayPause}
+        onDoubleClick={handlePlay}
       >
         <div className="flex items-center space-x-4">
           <p>{order + 1}</p>
@@ -67,13 +68,21 @@ function Tracks({ track, order }) {
           </div>
           <div className="flex-col">
             <p className="text-white w-36 lg:w-64 truncate">{track.title}</p>
-            <p className="w-40">{track.artist}</p>
+            <Link
+              href={{
+                pathname: "/artist/[id]",
+                query: { id: track.track.artists?.[0].id },
+              }}
+            >
+              <p className="w-40 group-hover:text-white group-hover:underline">
+                {track.artist}
+              </p>
+            </Link>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <div className="md:ml-auto flex items-center space-x-2.5">
-            <p>{millisecondsToMinutesAndSeconds(track.duration)}</p>
-          </div>
+        <div className="flex items-center justify-between ml-auto md:ml-0 ">
+          <p className="hidden md:inline w-40">{track.albumName}</p>
+          <p>{millisecondsToMinutesAndSeconds(track.duration)}</p>
         </div>
       </div>
     </div>

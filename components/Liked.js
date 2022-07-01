@@ -42,7 +42,11 @@ function Liked() {
           <PlayIcon className=" w-20 h-20 text-green-500 hover:scale-110" />
           <DotsHorizontalIcon className=" w-10 h-10" />
         </div>
-        <Songs tracks={likedSongInfo?.items} />
+        {/* <Songs tracks={likedSongInfo?.items} /> */}
+        {likedSongInfo.length > 0 &&
+          likedSongInfo.map((track, index) => (
+            <Songs track={track} order={index} />
+          ))}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { getSession, useSession } from "next-auth/react";
 import { shuffle } from "lodash";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { categoryPlaylistIdState } from "../../atoms/categoryAtom";
-import { playlistState } from "../../atoms/playlistAtom";
+import { playlistSongsState, playlistState } from "../../atoms/playlistAtom";
 import useSpotify from "../../hooks/useSpotify";
 import { Sidebar, Songs, DropDown, Player } from "../../components";
 
@@ -29,6 +29,7 @@ function Playlist() {
   const [playlist, setPlaylist] = useRecoilState(playlistState);
   console.log({ playlist });
 
+  const [playlistSongs, setPlaylistSongs] = useRecoilState(playlistSongsState);
   useEffect(() => {
     setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
   }, [categoryPlaylistId]);
@@ -37,7 +38,23 @@ function Playlist() {
     spotifyApi
       .getPlaylist(categoryPlaylistId)
       .then((data) => {
-        setPlaylist(data.body);
+          console.log(data.body);
+        // setPlaylist(data.body);
+
+        const playlistData = {
+          id: data.body.id,
+          name: data.body.name,
+          imageUrl: data.body.images[0].url,
+          description: data.body.description,
+          uri: data.body.uri,
+          // tracks: data.body.tracks.items,
+          tracks: data.body.tracks.items,
+        };
+        // console.log(playlistData);
+        setPlaylist(playlistData);
+        const playlistSongsData = data.body.tracks.items;
+        // console.log(playlistSongsData);
+        setPlaylistSongs(playlistSongsData);
       })
       .catch((error) =>
         console.log("Something went wrong with the playlist fetching", error)
@@ -72,7 +89,7 @@ function Playlist() {
                   priority
                 />
               )} */}
-              <img src={playlist?.images?.[0]?.url} alt={playlist.name} />
+              <img src={playlist.imageUrl} alt={playlist.name} />
             </div>
             <div>
               <p>Playlists</p>
@@ -84,7 +101,10 @@ function Playlist() {
           </section>
           <div>
             {/* <Songs tracks={playlist?.tracks?.items} /> */}
-            <Songs tracks={playlist?.tracks?.items} />
+            {playlistSongs.length > 0 &&
+              playlistSongs.map((track, index) => (
+                <Songs track={track} order={index} />
+              ))}
           </div>
         </main>
       </div>

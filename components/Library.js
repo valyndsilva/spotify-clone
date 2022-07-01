@@ -46,7 +46,7 @@ function Library() {
                 {/* <p className="absolute bottom-5 left-10">{likedSongInfo?.items.map((info)=>{info.track.name
                info.track.artists?.[0].name})}</p> */}
                 <p className="absolute bottom-20 left-10">
-                  {likedSongInfo?.items.slice(0, 3).map((info) => (
+                  {likedSongInfo?.slice(0, 3).map((info) => (
                     <div className="flex w-72">
                       <span className="font-bold truncate">
                         {info.track.name} &nbsp;
