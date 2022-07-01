@@ -49,9 +49,8 @@ function Tracks({ track, order }) {
   };
 
   return (
-    <div className="text-white px-8 flex-col space-y-1">
+    <div key={track.id} className="text-white px-8 flex-col space-y-1">
       <div
-        key={track.id}
         className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
         onClick={handlePlayPause}
       >

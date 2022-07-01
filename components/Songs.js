@@ -2,10 +2,7 @@ import Image from "next/image";
 import React from "react";
 import useSpotify from "../hooks/useSpotify";
 import { millisecondsToMinutesAndSeconds } from "../lib/time";
-import {
-  currentTrackIdState,
-  isPlayingState,
-} from "../atoms/songAtom";
+import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Link from "next/link";
 import { PlayIcon } from "@heroicons/react/solid";
@@ -60,7 +57,7 @@ function Songs({ track, order }) {
             <Link
               href={{
                 pathname: "/artist/[id]",
-                query: { id:track.track.artists?.[0].id },
+                query: { id: track.track.artists?.[0].id },
               }}
             >
               <p className="w-40  group-hover:text-white group-hover:underline">

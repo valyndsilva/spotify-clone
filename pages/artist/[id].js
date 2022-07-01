@@ -24,7 +24,11 @@ import {
   artistTopTracksState,
   singleArtistState,
 } from "../../atoms/artistAtom";
-import { DotsHorizontalIcon, PlayIcon } from "@heroicons/react/solid";
+import {
+  BadgeCheckIcon,
+  DotsHorizontalIcon,
+  PlayIcon,
+} from "@heroicons/react/solid";
 import { HeartIcon } from "@heroicons/react/outline";
 
 function Artist() {
@@ -36,7 +40,7 @@ function Artist() {
   // console.log(router.query.id);
 
   const [artistId, setArtistId] = useRecoilState(artistIdState);
-  setArtistId(router.query.id);
+  // setArtistId(router.query.id);
   // console.log({ artistId });
 
   const [artistAlbums, setArtistAlbums] = useRecoilState(artistAlbumsState);
@@ -46,6 +50,10 @@ function Artist() {
   const [artistsRelatedToArtist, setArtistsRelatedToArtist] = useRecoilState(
     artistsRelatedToArtistState
   );
+
+  useEffect(() => {
+    setArtistId(router.query.id);
+  }, []);
 
   const fetchSingleArtist = () => {
     // Get an artist
@@ -153,7 +161,9 @@ function Artist() {
   useEffect(() => {
     setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
   }, []);
-
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
   return (
     <div className="bg-black h-screen overflow-hidden">
       <div className="flex text-white">
@@ -167,7 +177,7 @@ function Artist() {
             className={`flex items-end space-x-7 bg-gradient-to-b to-black ${color} h-80 text-white p-8`}
           >
             <div className="w-56 h-56 cursor-pointer relative">
-              {/* {singleArtist && (
+              {singleArtist && (
                 <Image
                   src={singleArtist.imageUrl}
                   alt={singleArtist.name}
@@ -176,15 +186,18 @@ function Artist() {
                   priority
                   className="shadow-2xl rounded-full "
                 />
-              )} */}
+              )}
             </div>
-            <div className="">
-              <span className="text-sm font-light ml-10">Verified Artist</span>
-              <h1 className="text-8xl font-bold capitalize p-8">
+            <div className="ml-10 space-y-2 ">
+              <span className="text-sm font-light flex items-center">
+                <BadgeCheckIcon className="w-8 h-8 text-blue-500" />
+                Verified Artist
+              </span>
+              <h1 className="text-8xl font-bold capitalize ">
                 {singleArtist.name}
               </h1>
-              <p className="text-xl font-light ml-10">
-                {singleArtist.followers} monthly listeners
+              <p className="text-xl font-light ml-2">
+                {numberWithCommas(singleArtist.followers)} monthly listeners
               </p>
             </div>
           </section>

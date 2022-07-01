@@ -6,18 +6,18 @@ import { artistAlbumIdState } from "../atoms/artistAtom";
 
 function Albums({ albums }) {
   console.log({ albums });
- 
+
   return (
     <>
       {albums?.map((album) => (
         <Link
+          key={album.id}
           href={{
             pathname: "/album/[id]",
             query: { id: album.id },
           }}
         >
           <div
-            key={album.id}
             className="w-full h-72 overflow-hidden relative text-white/80 cursor-pointer hover:scale-105 hover:text-white/100 transition duration-200 ease-out group mx-auto  bg-[#0D0D0D]"
             //   onClick={handlePlayPause}
           >

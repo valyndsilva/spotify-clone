@@ -27,7 +27,6 @@ function Album() {
   const router = useRouter();
   // console.log("artist albumId:",router.query.id);
   const [artistAlbumId, setArtistAlbumId] = useRecoilState(artistAlbumIdState);
-  setArtistAlbumId(router.query.id);
 
   const [artistAlbumInfo, setArtistAlbumInfo] =
     useRecoilState(artistAlbumInfoState);
@@ -40,6 +39,10 @@ function Album() {
   const spotifyApi = useSpotify();
 
   const [color, setColor] = useState(null);
+
+  useEffect(() => {
+    setArtistAlbumId(router.query.id);
+  }, []);
 
   useEffect(() => {
     setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
@@ -69,30 +72,6 @@ function Album() {
         console.log("Something went wrong!", err);
       });
   };
-  // const fetchTracksInAlbums = () => {
-  //   // Get tracks in an album
-  //   // "41MnTivkwTO3UUJ8DrqEJJ"
-  //   // "4KjbNbnTnJ97kZgQkOHr6v"
-  //   spotifyApi
-  //     .getAlbumTracks(artistAlbumId, { limit: 5, offset: 1 })
-  //     .then((data) => {
-  //       console.log("Tracks In Artist Album", data.body.items);
-  //       setArtistAlbumTracks(
-  //         data.body.items.map((track) => {
-  //           return {
-  //             id: track.id,
-  //             title: track.name,
-  //             artist: track.artists?.[0].name,
-  //             duration: track.duration_ms,
-  //             uri: track.uri,
-  //           };
-  //         })
-  //       );
-  //     })
-  //     .catch((err) => {
-  //       console.log("Something went wrong!", err);
-  //     });
-  // };
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && artistAlbumId) {
@@ -127,13 +106,11 @@ function Album() {
               </section>
               <div>
                 {album.tracks &&
-                  album.tracks.items.map((track, index) => {
-                    <AlbumTracks
-                      track={track}
-                      order={index}
+                  <AlbumTracks
+                      tracks={album.tracks}
                       albumUrl={album.imageUrl}
-                    />;
-                  })}
+                    />
+                }
               </div>
             </>
           ))}
@@ -147,18 +124,8 @@ function Album() {
 }
 
 export default Album;
-{
-  /* <>
-            
-              <div>
-                {album.tracks &&
-                  album.tracks.items.map((track, index) => {
-                    <AlbumTracks
+  {/* <AlbumTracks
                       track={track}
                       order={index}
                       albumUrl={album.imageUrl}
-                    />;
-                  })}
-              </div>
-            </>; */
-}
+                    />; */}
