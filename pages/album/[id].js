@@ -97,7 +97,7 @@ function Album() {
                   <img src={album.imageUrl} alt={album.name} />
                 </div>
                 <div>
-                  <p>album</p>
+                  <p>{album.artist}</p>
                   <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
                     {album.name}
                   </h1>
@@ -105,12 +105,12 @@ function Album() {
                 </div>
               </section>
               <div>
-                {album.tracks &&
+                {album.tracks && (
                   <AlbumTracks
-                      tracks={album.tracks}
-                      albumUrl={album.imageUrl}
-                    />
-                }
+                    tracks={album.tracks}
+                    albumUrl={album.imageUrl}
+                  />
+                )}
               </div>
             </>
           ))}
@@ -124,8 +124,10 @@ function Album() {
 }
 
 export default Album;
-  {/* <AlbumTracks
+{
+  /* <AlbumTracks
                       track={track}
                       order={index}
                       albumUrl={album.imageUrl}
-                    />; */}
+                    />; */
+}
