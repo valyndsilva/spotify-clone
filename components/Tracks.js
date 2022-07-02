@@ -38,9 +38,8 @@ function Tracks({ track, order }) {
   const [play, setPlay] = useRecoilState(playState);
 
   const handlePlay = () => {
-    console.log({ track });
-
-    console.log(" handlePlay1 triggered!!!!!!!!!");
+    // console.log({ track });
+    // console.log(" handlePlay triggered!!!!!!!!!");
     setCurrentTrackId(track.id); // triggers useSongInfo
     setIsPlaying(true);
     console.log(track.id);

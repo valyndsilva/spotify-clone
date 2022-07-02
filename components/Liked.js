@@ -43,7 +43,7 @@ function Liked() {
           <DotsHorizontalIcon className=" w-10 h-10" />
         </div>
         {/* <Songs tracks={likedSongInfo?.items} /> */}
-        {likedSongInfo.length > 0 &&
+        {likedSongInfo &&
           likedSongInfo.map((track, index) => (
             <Songs track={track} order={index} />
           ))}

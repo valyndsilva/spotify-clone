@@ -17,6 +17,7 @@ import {
 import useSpotify from "../hooks/useSpotify";
 import useSongInfo from "../hooks/useSongInfo";
 import {
+  HeartIcon,
   ReplyIcon,
   SwitchHorizontalIcon,
   VolumeUpIcon as VolumeDownIcon,
@@ -36,7 +37,7 @@ function Player() {
 
   const songInfo = useSongInfo();
   // console.log({ songInfo });
-
+  const [hasLiked, setHasLiked] = useState(false);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
@@ -130,7 +131,7 @@ function Player() {
   // Handle Play/Pause events if device id available and is_playing is set to true
   const handlePlayPause = () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      console.log("handlePlayPause in Player Component:", data.body);
+      // console.log("handlePlayPause in Player Component:", data.body);
       if (data.body?.is_playing && data.body?.device.id) {
         spotifyApi.pause();
         setPlay(false);
@@ -164,6 +165,14 @@ function Player() {
           <div>
             <h3>{songInfo?.name}</h3>
             <p>{songInfo?.artists?.[0]?.name}</p>
+          </div>
+          <div>
+            <HeartIcon
+              className={`w-5 h-5  ml-3 ${
+                hasLiked ? "fill-[#1ED760] text-[#1ED760]" : "text-[#868686]"
+              }`}
+              onClick={() => setHasLiked(!hasLiked)}
+            />
           </div>
         </div>
       ) : null}

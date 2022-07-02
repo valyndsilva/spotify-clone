@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSession } from "next-auth/react";
 import { Songs, DropDown } from "./";
 import Image from "next/image";
@@ -10,6 +10,8 @@ import {
   playlistSongsState,
 } from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
+
+import { Menu, Transition } from "@headlessui/react";
 
 const colors = [
   "from-indigo-500",
@@ -99,17 +101,48 @@ function Home() {
           <p>{playlist?.description}</p>
         </div>
       </section>
-      <div>
-        <div className="flex items-center space-x-4 p-8">
+      <section>
+        <div className="flex items-center space-x-3 p-8">
           <PlayIcon className=" w-20 h-20 text-green-500 hover:scale-110" />
           <HeartIcon className=" w-10 h-10" />
-          <DotsHorizontalIcon className=" w-10 h-10" />
+          <Menu as="div">
+            <Menu.Button className="flex items-center px-4 py-3 bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-white ">
+              <DotsHorizontalIcon className=" w-10 h-10" />
+            </Menu.Button>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="absolute top-56 left-96 w-56 origin-top-right bg-[#1A1A1A] divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="px-1 py-1 ">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <>
+                        <div className="flex flex-col space-y-3 px-2 py-2 text-sm tracking-wide">
+                          <span className="flex justify-between">Follow</span>
+                          <span className="">Go to artist radio</span>
+                          <span className="">Share</span>
+                          <hr className="border-t-[0.1px] border-gray-800" />
+                          <span className="">Open in Desktop app</span>
+                        </div>
+                      </>
+                    )}
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
         </div>
         {playlistSongs.length > 0 &&
           playlistSongs.map((track, index) => (
             <Songs track={track} order={index} />
           ))}
-      </div>
+      </section>
     </div>
   );
 }
