@@ -12,6 +12,7 @@ import {
 import useSpotify from "../hooks/useSpotify";
 import Image from "next/image";
 import { millisecondsToMinutesAndSeconds } from "../lib/time";
+import Link from "next/link";
 
 function AlbumTracks({ tracks, order, albumUrl }) {
   console.log({ tracks });
@@ -36,7 +37,10 @@ function AlbumTracks({ tracks, order, albumUrl }) {
   return (
     <section>
       {tracks.items.map((track, index) => (
-        <div key={track.id} className="text-white px-8 flex-col space-y-1">
+        <div
+          key={track.id}
+          className="text-white px-8 flex-col space-y-1 group"
+        >
           <div
             className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
             onClick={() => {
@@ -56,7 +60,17 @@ function AlbumTracks({ tracks, order, albumUrl }) {
               </div>
               <div className="flex-col">
                 <p className="text-white w-36 lg:w-64 truncate">{track.name}</p>
-                <p className="w-40">{track.artists[0].name}</p>
+                <Link
+                  key={track.artists[0].id}
+                  href={{
+                    pathname: "/artist/[id]",
+                    query: { id: track.artists[0].id },
+                  }}
+                >
+                  <p className="w-40  group-hover:text-white group-hover:underline">
+                    {track.artists[0].name}
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="flex items-center space-x-4">

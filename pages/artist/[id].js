@@ -9,15 +9,14 @@ import {
   DropDown,
   Player,
   Tracks,
-  Playlists,
   Albums,
+  Artists,
 } from "../../components";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { shuffle } from "lodash";
 import {
-  artistAlbumIdState,
   artistAlbumsState,
   artistIdState,
   artistsRelatedToArtistState,
@@ -78,36 +77,12 @@ function Artist() {
       .catch((error) => console.log("Something went wrong!", error));
   };
 
-  const fetchArtistAlbums = () => {
-    console.log("fetchArtistAlbums triggered!!!!!");
-    // Get Artist albums
-    spotifyApi
-      .getArtistAlbums(artistId, { limit: 5, offset: 20 })
-      .then((data) => {
-        console.log("Artist albums", data.body);
-        const artistAlbumsInfo = data.body.items;
-        console.log({ artistAlbumsInfo });
-        // setArtistAlbums(artistAlbums);
-        setArtistAlbums(
-          data.body.items.map((album) => {
-            return {
-              id: album.id,
-              name: album.name,
-              uri: album.uri,
-              imageUrl: album.images[0].url,
-            };
-          })
-        );
-      })
-      .catch((error) => console.log("Something went wrong!", error));
-  };
-
   const fetchArtistTopTracks = () => {
     // Get an artist's top tracks
     spotifyApi
       .getArtistTopTracks(artistId, "GB")
       .then((data) => {
-        console.log("Artists Top Tracks", data.body);
+        // console.log("Artists Top Tracks", data.body);
         setArtistTopTracks(
           data.body.tracks.map((track) => {
             return {
@@ -129,13 +104,47 @@ function Artist() {
       .catch((error) => console.log("Something went wrong!", error));
   };
 
+  const fetchArtistAlbums = () => {
+    console.log("fetchArtistAlbums triggered!!!!!");
+    // Get Artist albums
+    spotifyApi
+      .getArtistAlbums(artistId, { limit: 5, country: "GB", offset: 1 })
+      .then((data) => {
+        // console.log("Artist albums", data.body);
+        const artistAlbumsInfo = data.body.items;
+        console.log({ artistAlbumsInfo });
+        setArtistAlbums(
+          data.body.items.map((album) => {
+            return {
+              type: album.album_type,
+              releaseDate: album.release_date,
+              id: album.id,
+              name: album.name,
+              uri: album.uri,
+              imageUrl: album.images?.[0].url,
+            };
+          })
+        );
+      })
+      .catch((error) => console.log("Something went wrong!", error));
+  };
+
   const fetchArtistsRelatedToArtist = () => {
     // Get artists related to an artist
     spotifyApi
       .getArtistRelatedArtists(artistId)
       .then((data) => {
-        console.log("Artists Related To Artist", data.body);
-        setArtistsRelatedToArtist(data.body);
+        // console.log("Artists Related To Artist", data.body.artists);
+        setArtistsRelatedToArtist(
+          data.body.artists.map((artist) => ({
+            id: artist.id,
+            name: artist.name,
+            uri: artist.uri,
+            imageUrl: artist.images?.[0].url,
+            popularity: artist.popularity,
+          }))
+        );
+        // console.log({ artistsRelatedToArtist });
       })
       .catch((error) => console.log("Something went wrong!", error));
   };
@@ -256,7 +265,7 @@ function Artist() {
                   <Tracks track={track} order={index} />
                 ))}
             </section>
-            <section className="mb-20">
+            <section className="">
               <h2 className="text-xl font-semibold ml-10 pt-5 capitalize">
                 Discography
               </h2>
@@ -270,17 +279,17 @@ function Artist() {
                 )}
               </div>
             </section>
-            {/* <section>
-              <h2 className="text-white font-bold mb-3">
-                {searchArtistResults.length > 0 &&
-                  `Artist Result for "${search}"`}
+            <section className="mb-20">
+              <h2 className="text-xl font-semibold ml-10 pt-5 capitalize">
+                Fans also like
               </h2>
               <div className="grid overflow-y-scroll scrollbar-hide h-72 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
-                {searchArtistResults.length > 0 && (
-                  <Artists artists={searchArtistResults} />
-                )}
+                {artistsRelatedToArtist &&
+                  artistsRelatedToArtist.map((artist) => (
+                    <Artists artist={artist} />
+                  ))}
               </div>
-            </section> */}
+            </section>
           </div>
         </main>
       </div>

@@ -1,17 +1,19 @@
-import { PlayIcon } from "@heroicons/react/solid";
+import Link from "next/link";
 import React from "react";
 
-function Artists({ artists }) {
-  console.log({ artists });
+function Artists({ artist }) {
+  // console.log({ artist });
 
   return (
     <>
-      {artists?.map((artist) => (
-        <div
-          key={artist.id}
-          className="w-[200px] h-[250px] overflow-hidden relative text-white/80 cursor-pointer hover:scale-105 hover:text-white/100 transition duration-200 ease-out group mx-auto  bg-[#0D0D0D]"
-          //   onClick={handlePlayPause}
-        >
+      <Link
+        key={artist.id}
+        href={{
+          pathname: "/artist/[id]",
+          query: { id: artist.id },
+        }}
+      >
+        <div className="w-[200px] h-[250px] overflow-hidden relative text-white/80 cursor-pointer hover:scale-105 hover:text-white/100 transition duration-200 ease-out group mx-auto  bg-[#181818]">
           <img
             src={artist.imageUrl}
             alt={artist.name}
@@ -19,12 +21,14 @@ function Artists({ artists }) {
           />
           <div className=" inset-x-0 ml-4 flex items-center space-x-3.5  px-5">
             <div className="text-[15px]">
-              <h4 className="font-extrabold truncate w-36">{artist.name}</h4>
+              <p className="w-40  group-hover:text-white group-hover:underline">
+                {artist.name}
+              </p>
               <h6>Artist</h6>
             </div>
           </div>
         </div>
-      ))}
+      </Link>
     </>
   );
 }

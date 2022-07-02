@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Sidebar,Player, Library } from "../../components";
+import { Sidebar, Player, Library } from "../../components";
 
 const Playlists = () => {
   return (

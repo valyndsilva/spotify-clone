@@ -61,7 +61,7 @@ function Player() {
       let availableDevices = data.body.devices;
       // console.log(availableDevices);
       availableDevices.map((device) => {
-        console.log({ device });
+        // console.log({ device });
         // console.log(device.id);
         // console.log(device.is_active);
         setDeviceId(device.id);

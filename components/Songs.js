@@ -10,7 +10,7 @@ import { PauseIcon } from "@heroicons/react/outline";
 import { artistIdState } from "../atoms/artistAtom";
 
 function Songs({ track, order }) {
-  console.log(track);
+  // console.log(track);
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);

@@ -32,7 +32,7 @@ function Library() {
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <Header />
 
-      <section className="flex-col text-white p-8">
+      <section className="flex-col text-white p-8 pb-20">
         <div className="flex">
           <Link href="/collection/tracks">
             <div className=" p-5 space-x-2 space-y-3 ">
@@ -92,7 +92,7 @@ function Library() {
               </>
             ))}
         </div>
-        <div className="mt-5 ml-5">
+        <div className="mt-5 ml-5 ">
           {/* Recently Played Tracks Poster*/}
           <h2 className="text-white font-bold mb-3">
             {recentlyPlayed.length > 0 && "Recently Played Songs"}
