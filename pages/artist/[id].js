@@ -259,7 +259,9 @@ function Artist() {
             </section>
 
             <section className="mb-10">
-              <h2>Popular</h2>
+              <h2 className="text-xl font-semibold ml-10 pt-5 capitalize">
+                Popular
+              </h2>
               {artistTopTracks.length > 0 &&
                 artistTopTracks.map((track, index) => (
                   <Tracks track={track} order={index} />
