@@ -26,7 +26,11 @@ function Genre() {
   ];
 
   const [color, setColor] = useState(null);
+  const [categoryPlaylistId, setCategoryPlaylistId] = useRecoilState(
+    categoryPlaylistIdState
+  );
   useEffect(() => {
+    console.log({ categoryPlaylistId });
     setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
   }, [categoryPlaylistId]);
 
@@ -38,11 +42,6 @@ function Genre() {
 
   const categoryName = useRecoilValue(categoryNameState);
   console.log({ categoryName });
-
-  const [categoryPlaylistId, setCategoryPlaylistId] = useRecoilState(
-    categoryPlaylistIdState
-  );
-  console.log({ categoryPlaylistId });
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
 
   const [categoryPlaylists, setCategoryPlaylists] = useRecoilState(
