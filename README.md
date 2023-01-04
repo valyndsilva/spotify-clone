@@ -8,7 +8,7 @@
 - [Tailwind CSS](https://tailwindcss.com/docs/guides/nextjs)
 - [Spotify Developer API](https://developer.spotify.com/)
 - [Recoil - State Management Library For React](https://recoiljs.org/)
-- JWT OAuth Tokens
+- [JWT OAuth Tokens](https://jwt.io/)
 - [Vercel](https://vercel.com/)
 
 ## Demo
