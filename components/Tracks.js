@@ -52,19 +52,24 @@ function Tracks({ track, order }) {
     <div key={track.id} className="text-white px-8 flex-col space-y-1 group">
       <div
         className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer hover:bg-gray-900"
-        onDoubleClick={handlePlay}
+        onClick={handlePlay}
       >
         <div className="flex items-center space-x-4">
           <p>{order + 1}</p>
-          <div className="w-12 h-12 relative">
-            <Image
+          {/* <div className="w-12 h-12 relative"> */}
+          {/* <Image
               src={track.albumUrl}
               alt={track.title}
               layout="fill" // required
               objectFit="cover" // change to suit your needs
               priority
-            />
-          </div>
+            /> */}
+          {/* </div> */}
+          <img
+            src={track.albumUrl}
+            alt={track.title}
+            className="object-cover w-12 h-12"
+          />
           <div className="flex-col">
             <p className="text-white w-36 lg:w-64 truncate">{track.title}</p>
             <Link

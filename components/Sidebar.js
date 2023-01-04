@@ -36,7 +36,7 @@ function Sidebar() {
   return (
     <div className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900  h-screen overflow-y-scroll scrollbar-hide hidden  sm:max-w-[12rem] lg:max-w-[20rem] md:inline-flex md:max-w-[18rem] pb-36">
       <div className="space-y-4">
-        <div className="h-10 relative">
+        {/* <div className="h-10 relative">
           <Image
             src={spotifyImg}
             alt="logo"
@@ -44,7 +44,7 @@ function Sidebar() {
             objectFit="cover" // change to suit your needs
             priority
           />
-        </div>
+        </div> */}
 
         <SidebarOption Icon={HomeIcon} title="Home" link="/" />
 

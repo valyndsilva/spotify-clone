@@ -388,7 +388,7 @@ function Search() {
             </div>
 
             {/* Search Artists */}
-            <h2 className="text-white font-bold mb-3">
+            {/* <h2 className="text-white font-bold mb-3">
               {searchArtistResults.length > 0 &&
                 `Artist Result for "${search}"`}
             </h2>
@@ -396,7 +396,7 @@ function Search() {
               {searchArtistResults.length > 0 && (
                 <Artists artists={searchArtistResults} />
               )}
-            </div>
+            </div> */}
 
             {/* Search Top Songs Poster */}
             <h2 className="text-white font-bold mb-3">

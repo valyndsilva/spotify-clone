@@ -37,7 +37,7 @@ function Songs({ track, order }) {
     >
       <div
         className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer active:bg-slate-600  hover:bg-gray-900"
-        onDoubleClick={handlePlay}
+        onClick={handlePlay}
       >
         <div className="flex items-center space-x-4">
           <p>{order + 1}</p>
