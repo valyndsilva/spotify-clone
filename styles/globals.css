@@ -6,4 +6,90 @@
   .playerButton {
     @apply h-5 w-5 cursor-pointer hover:scale-125 transition transform duration-100 ease-out;
   }
+
+  .playerBottom .progressBar {
+    width: 78%;
+    position: relative;
+    height: 5px;
+    outline: none;
+    appearance: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Chrome & Safari */
+
+  .playerBottom .progressBar::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    background: #848484;
+    width: var(--played-width);
+    height: 100%;
+    border-radius: 10px;
+    z-index: 2;
+    transition: width 250ms linear;
+  }
+
+  .playerBottom .progressBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    margin: -2px 0 0 0;
+    z-index: 3;
+    box-sizing: border-box;
+    transition: all 250ms linear;
+  }
+
+  /* firefox */
+  .playerBottom .progressBar::-moz-range-track {
+    width: 100%;
+    height: 5px;
+    outline: none;
+    appearance: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .playerBottom .progressBar::-moz-range-progress {
+    background: #848484;
+    width: var(--played-width);
+    height: 100%;
+    border-radius: 10px;
+    z-index: 2;
+    transition: width 250ms linear;
+  }
+
+  .playerBottom .progressBar::-moz-range-thumb {
+    -moz-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    margin: -2px 0 0 0;
+    z-index: 3;
+    box-sizing: border-box;
+    transition: all 250ms linear;
+  }
+
+  @media screen and (max-width: 550px) {
+    .playerBottom .currentTime {
+      margin-right: 0px;
+    }
+
+    .playerBottom .duration {
+      margin-left: 0px;
+    }
+
+    .playerBottom .progressBar {
+      width: 110px;
+    }
+  }
 }

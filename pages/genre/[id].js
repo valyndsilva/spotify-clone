@@ -125,7 +125,8 @@ function Genre() {
             <h2 className="text-xl font-semibold ml-10 capitalize">
               Popular playlists
             </h2>
-            <div className="grid grid-cols-3  md:grid-cols-3  lg:grid-cols-5 lg:gap-4 space-x-4 text-white p-4 ml-5 overflow-y-scroll scrollbar-hide h-72">
+            {/* <div className="grid grid-cols-3  md:grid-cols-3  lg:grid-cols-5 lg:gap-4 space-x-4 text-white p-4 ml-5 overflow-y-scroll scrollbar-hide h-72"> */}
+            <div className="grid grid-cols-3  md:grid-cols-3  lg:grid-cols-5 lg:gap-4 space-x-4 text-white p-4 ml-5 overflow-y-scroll scrollbar-hide h-[60vh]">
               {categoryPlaylists.length > 0 &&
                 categoryPlaylists.map((categoryPlaylist, index) => (
                   <div
@@ -166,13 +167,13 @@ function Genre() {
             </div>
 
             {/* Tracks */}
-            <h2 className="text-xl font-semibold ml-10 pt-5 capitalize">
+            {/* <h2 className="text-xl font-semibold ml-10 pt-5 capitalize">
               New Releases
             </h2>
             <div className="grid ml-5 overflow-y-scroll scrollbar-hide h-[350px] py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
               {newReleases.length > 0 &&
                 newReleases.map((track) => <Poster track={track} />)}
-            </div>
+            </div> */}
           </section>
         </main>
       </div>

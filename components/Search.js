@@ -328,15 +328,14 @@ function Search() {
     <div className="text-white flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <Header />
 
-      <section className="bg-black ml-24 py-4 space-y-8 md:max-w-6xl flex-grow md:mr-2.5">
+      <section className="bg-black ml-24 py-4 space-y-8 flex-grow md:mx-5 mb-20">
         {search ? (
           <>
             <div className="grid grid-cols-12 gap-3">
-              {/* Recently Played Tracks */}
+              {/* Search Top Artist Result */}
               <div className="col-span-4">
                 <div className=" bg-[#0D0D0D] border-2 border-[#262626] p-4  rounded-xl space-y-4 mt-8">
                   <div className="space-y-4 overflow-x-hidden h-72">
-                    {/* Search Top Artist Result */}
                     <h2 className="text-white text-xl font-bold mb-3">
                       Top Result
                     </h2>
@@ -387,17 +386,6 @@ function Search() {
               </div>
             </div>
 
-            {/* Search Artists */}
-            {/* <h2 className="text-white font-bold mb-3">
-              {searchArtistResults.length > 0 &&
-                `Artist Result for "${search}"`}
-            </h2>
-            <div className="grid overflow-y-scroll scrollbar-hide h-72 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
-              {searchArtistResults.length > 0 && (
-                <Artists artists={searchArtistResults} />
-              )}
-            </div> */}
-
             {/* Search Top Songs Poster */}
             <h2 className="text-white font-bold mb-3">
               {searchResults.length && `Top Songs Result for "${search}"`}
@@ -405,17 +393,6 @@ function Search() {
             <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
               {searchResults.length > 0 &&
                 searchResults.map((track) => <Poster track={track} />)}
-            </div>
-
-            {/* Recently Played Tracks Poster*/}
-            <h2 className="text-white font-bold mb-3">
-              {recentlyPlayed.length > 0 && "Recently Played Songs"}
-            </h2>
-            <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
-              {recentlyPlayed.length>0 &&
-                recentlyPlayed.map((track) => (
-                  <RecentlyPlayedPoster track={track} />
-                ))}
             </div>
 
             <div className="grid grid-cols-12 gap-3">

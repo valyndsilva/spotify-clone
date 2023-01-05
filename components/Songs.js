@@ -32,7 +32,7 @@ function Songs({ track, order }) {
 
   return (
     <div
-      key={track.track.id}
+      key={track?.track.id}
       className="text-white px-8 flex-col space-y-1 group"
     >
       <div
@@ -43,8 +43,8 @@ function Songs({ track, order }) {
           <p>{order + 1}</p>
           <div className="w-10 h-10 relative">
             <Image
-              src={track.track.album.images[0].url}
-              alt={track.track.name}
+              src={track?.track.album.images[0].url}
+              alt={track?.track.name}
               layout="fill" // required
               objectFit="cover" // change to suit your needs
               priority
@@ -52,23 +52,23 @@ function Songs({ track, order }) {
           </div>
           <div>
             <p className="text-white w-36 lg:w-64 truncate">
-              {track.track.name}
+              {track?.track.name}
             </p>
             <Link
               href={{
                 pathname: "/artist/[id]",
-                query: { id: track.track.artists?.[0].id },
+                query: { id: track?.track.artists?.[0].id },
               }}
             >
               <p className="w-40  group-hover:text-white group-hover:underline">
-                {track.track.artists[0].name}
+                {track?.track.artists[0].name}
               </p>
             </Link>
           </div>
         </div>
         <div className="flex items-center justify-between ml-auto md:ml-0 ">
-          <p className="hidden md:inline w-40">{track.track.album.name}</p>
-          <p>{millisecondsToMinutesAndSeconds(track.track.duration_ms)}</p>
+          <p className="hidden md:inline w-40">{track?.track.album.name}</p>
+          <p>{millisecondsToMinutesAndSeconds(track?.track.duration_ms)}</p>
         </div>
       </div>
     </div>

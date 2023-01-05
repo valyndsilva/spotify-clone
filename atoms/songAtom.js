@@ -5,6 +5,16 @@ export const songInfoState = atom({
   default: null, // default value (initial value)
 });
 
+export const newSongInfoState = atom({
+  key: "newSongInfoState", //unique ID(with respect to other atom/selectors)
+  default: null, // default value (initial value)
+});
+
+export const prevNextClickedState = atom({
+  key: "prevNextClickedState", //unique ID(with respect to other atom/selectors)
+  default: false, // default value (initial value)
+});
+
 export const likedSongInfoState = atom({
   key: "likedSongInfoState", //unique ID(with respect to other atom/selectors)
   default: null, // default value (initial value)
@@ -49,4 +59,3 @@ export const isPlayingState = atom({
   key: "isPlayingState",
   default: false,
 });
-
