@@ -197,7 +197,7 @@ function Search() {
       .getMyTopArtists()
       .then((data) => {
         let topArtists = data.body.items;
-        console.log({ topArtists });
+        // console.log({ topArtists });
         setTopArtistResults(
           data.body.items.map((artist) => {
             return {
@@ -224,7 +224,7 @@ function Search() {
         country: "GB",
       })
       .then((data) => {
-        console.log(data.body.playlists.items);
+        // console.log(data.body.playlists.items);
         setFeaturedPlaylistsResults(
           data.body.playlists.items.map((playlist) => {
             return {
@@ -248,9 +248,9 @@ function Search() {
       .getMyRecentlyPlayedTracks({ limit: 20 })
       .then((res) => {
         // console.log(res.body);
-        console.log("List of Recently Played Tracks:", res.body.items);
+        // console.log("List of Recently Played Tracks:", res.body.items);
         const duplicates = res.body.items;
-        console.log({ duplicates });
+        // console.log({ duplicates });
         const unique = [];
         duplicates.map(({ track }) =>
           unique.filter((a) => a.track.id == track.id).length > 0
@@ -258,7 +258,7 @@ function Search() {
             : unique.push({ track })
         );
 
-        console.log(unique);
+        // console.log(unique);
 
         setRecentlyPlayed(
           unique.map(({ track }) => {
@@ -330,7 +330,7 @@ function Search() {
 
       <section className="bg-black ml-24 py-4 space-y-8 flex-grow md:mx-5 mb-20">
         {search ? (
-          <>
+          <div className="max-w-6xl">
             <div className="grid grid-cols-12 gap-3">
               {/* Search Top Artist Result */}
               <div className="col-span-4">
@@ -390,7 +390,7 @@ function Search() {
             <h2 className="text-white font-bold mb-3">
               {searchResults.length && `Top Songs Result for "${search}"`}
             </h2>
-            <div className="grid overflow-y-scroll scrollbar-hide h-64 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
+            <div className="grid overflow-y-scroll scrollbar-hide h-72 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
               {searchResults.length > 0 &&
                 searchResults.map((track) => <Poster track={track} />)}
             </div>
@@ -439,14 +439,14 @@ function Search() {
               {searchPlaylistResults.length > 0 &&
                 `Playlist Result for "${search}"`}
             </h2>
-            <div className="grid overflow-y-scroll scrollbar-hide h-96 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
+            <div className="grid overflow-y-scroll scrollbar-hide h-80 py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
               {searchPlaylistResults.length > 0 && (
                 <Playlists playlists={searchPlaylistResults} />
               )}
             </div>
-          </>
+          </div>
         ) : (
-          <>
+          <div className="max-w-6xl">
             <h2 className="text-2xl font-bold  mb-5">Browse All</h2>
             {/* <div className="grid gap-3 grid-cols-3 md:grid-cols-4"> */}
             <div className="grid gap-5 grid-cols-3 md:grid-cols-5 ">
@@ -484,7 +484,7 @@ function Search() {
                   </Link>
                 ))}
             </div>
-          </>
+          </div>
         )}
       </section>
     </div>

@@ -26,12 +26,6 @@ function Poster({ track }) {
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
-  const [currentAlbumSongUri, setCurrentAlbumSongUri] = useRecoilState(
-    currentAlbumSongUriState
-  );
-
-  const [currentAlbumUri, setCurrentAlbumUri] =
-    useRecoilState(currentAlbumUriState);
 
   const handlePlayPause = () => {
     console.log({ track });

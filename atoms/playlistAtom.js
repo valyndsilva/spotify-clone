@@ -28,6 +28,7 @@ export const recentlyPlayedState = atom({
 export const playlistIdState = atom({
   key: "playlistIdState",
   default: "37i9dQZF1DXcBWIGoYBM5M",
+  // default: null,
 });
 
 export const currentPlaylistIdState = atom({

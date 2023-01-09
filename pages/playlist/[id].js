@@ -4,9 +4,14 @@ import { getSession, useSession } from "next-auth/react";
 import { shuffle } from "lodash";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { categoryPlaylistIdState } from "../../atoms/categoryAtom";
-import { playlistSongsState, playlistState } from "../../atoms/playlistAtom";
+import {
+  playlistIdState,
+  playlistSongsState,
+  playlistState,
+} from "../../atoms/playlistAtom";
 import useSpotify from "../../hooks/useSpotify";
 import { Sidebar, Songs, DropDown, Player } from "../../components";
+import { useRouter } from "next/router";
 
 const colors = [
   "from-indigo-500",
@@ -18,27 +23,34 @@ const colors = [
   "from-purple-500",
 ];
 function Playlist() {
+  const router = useRouter();
+  const id = router.query["id"];
+  // console.log("url params id:", id);
+
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  setPlaylistId(id);
+  console.log("playlistId in [id]", playlistId);
+
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
 
   const [color, setColor] = useState(null);
 
-  const categoryPlaylistId = useRecoilValue(categoryPlaylistIdState);
-  console.log({ categoryPlaylistId });
-
   const [playlist, setPlaylist] = useRecoilState(playlistState);
-  console.log({ playlist });
+  // console.log({ playlist });
 
   const [playlistSongs, setPlaylistSongs] = useRecoilState(playlistSongsState);
+  // console.log({ playlistSongs });
+
   useEffect(() => {
     setColor(shuffle(colors).pop()); //shuffles the colors array and pops a color
-  }, [categoryPlaylistId]);
+  }, [playlistId]);
 
   const fetchPlaylists = () => {
     spotifyApi
-      .getPlaylist(categoryPlaylistId)
+      .getPlaylist(playlistId)
       .then((data) => {
-          console.log(data.body);
+        // console.log(data.body);
         // setPlaylist(data.body);
 
         const playlistData = {
@@ -62,11 +74,11 @@ function Playlist() {
   };
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken() && categoryPlaylistId) {
+    if (spotifyApi.getAccessToken() && playlistId) {
       //fetch Playlists Info
       fetchPlaylists();
     }
-  }, [categoryPlaylistIdState, spotifyApi, session]);
+  }, [playlistId, spotifyApi, session]);
 
   return (
     <div className="bg-black h-screen overflow-hidden">
@@ -74,7 +86,7 @@ function Playlist() {
         <Sidebar />
         <main className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
           <header className="absolute top-5 right-8">
-            <DropDown className="absolute top-5 right-8" />
+            <DropDown />
           </header>
           <section
             className={`flex items-end space-x-7 bg-gradient-to-b to-black ${color} h-80 text-white p-8`}
@@ -103,7 +115,7 @@ function Playlist() {
             {/* <Songs tracks={playlist?.tracks?.items} /> */}
             {playlistSongs.length > 0 &&
               playlistSongs.map((track, index) => (
-                <Songs track={track} order={index} />
+                <Songs key={index} track={track} order={index} />
               ))}
           </div>
         </main>

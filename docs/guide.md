@@ -8,7 +8,13 @@ NEXT_PUBLIC_CLIENT_ID=
 NEXT_PUBLIC_CLIENT_SECRET=
 JWT_SECRET=
 ```
+npm install react-player
+npm i react-player-controls
+npm i --save-dev @types/react-player-controls
+npm install screenfull
 
+https://www.npmjs.com/package/react-player-controls
+npm install rc-slider
 ## Scripts used:
 
 Create a new project folder with nextjs and tailwindcss framwework setup:

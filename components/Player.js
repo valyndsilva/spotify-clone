@@ -11,6 +11,7 @@ import {
   newSongInfoState,
   prevNextState,
   prevNextClickedState,
+  currentSongAlbumUriState,
 } from "../atoms/songAtom";
 import {
   deviceIdState,
@@ -32,15 +33,24 @@ import {
   RewindIcon,
   FastForwardIcon,
   VolumeUpIcon,
+  VolumeOffIcon,
 } from "@heroicons/react/solid";
 import { debounce } from "lodash";
+import { playlistIdState } from "../atoms/playlistAtom";
 
 function Player() {
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
+  const [durationMs, setDurationMs] = useState();
+  const [currentDurationMin, setCurrentDurationMin] = useState();
+  const [totalDurationMin, setTotalDurationMin] = useState();
+  const [progressMs, setProgressMs] = useState();
+
+  const playlistId = useRecoilValue(playlistIdState);
+  // console.log(playlistId);
 
   const songData = useSongInfo();
-  console.log({ songData });
+  // console.log("songData from useSongInfo:", songData);
   const [hasLiked, setHasLiked] = useState(false);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
@@ -51,14 +61,15 @@ function Player() {
     useRecoilState(isDeviceActiveState);
 
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-  const [play, setPlay] = useRecoilState(playState);
   // const [volume, setVolume] = useRecoilState(volumeState);
   const [volume, setVolume] = useState(50);
+  const [isMuted, setMuted] = useState(false);
 
   const [currentSongUri, setCurrentSongUri] =
     useRecoilState(currentSongUriState);
 
-  const currentAlbumSongUri = useRecoilValue(currentAlbumSongUriState);
+  const currentSongAlbumUri = useRecoilValue(currentSongAlbumUriState);
+  const [trackUrl, setTrackUrl] = useState("");
 
   const fetchDevice = () => {
     // Check if user device active and only then set volume
@@ -103,18 +114,20 @@ function Player() {
     if (volume > 0 && volume < 100) debouncedAdjustVolume(volume);
   }, [volume]);
 
-  const fetchCurrentSong = () => {
+  // Fetch Current Song Track Playing In Player:
+  const fetchCurrentSong = async () => {
     if (!currentTrackId && !currentSongUri) {
-      console.log("fetchCurrentSong Triggered!!");
+      // console.log("fetchCurrentSong Triggered!!");
 
       // Get the User's Currently Playing Track
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
         // console.log("Now Playing:", data.body?.item);
+        // setSongInfo(data.body?.item);
         setCurrentTrackId(data.body?.item?.id);
         // console.log(currentTrackId);
 
         const songUri = data.body?.item?.uri;
-        console.log({ songUri });
+        // console.log({ songUri });
         setCurrentSongUri(songUri);
 
         // Get Information About The User's Current Playback State
@@ -129,26 +142,30 @@ function Player() {
     if (spotifyApi.getAccessToken() && !currentTrackId && !currentSongUri) {
       fetchCurrentSong();
       setVolume(50);
-      // setAuto(true);
     }
   }, [currentTrackId, currentSongUri, spotifyApi, session]);
 
+  // Play / Pause Player:
+
+  const playMusic = () => {
+    setIsPlaying(true);
+    spotifyApi.play();
+  };
+
+  const pauseMusic = () => {
+    setIsPlaying(false);
+    spotifyApi.pause();
+  };
   // Handle Play/Pause events if device id available and is_playing is set to true
-  const handlePlayPause = () => {
+  const handlePlayPause = async () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      // console.log("handlePlayPause in Player Component:", data.body);
+      console.log("handlePlayPause in Player Component:", data.body);
       if (data.body?.is_playing && data.body?.device.id) {
-        spotifyApi.pause();
-        setPlay(false);
         setIsPlaying(false);
-        // audioPlayer.current.pause();
-        // cancelAnimationFrame(animationRef.current);
+        pauseMusic();
       } else {
-        spotifyApi.play();
-        setPlay(true);
         setIsPlaying(true);
-        // audioPlayer.current.play();
-        // animationRef.current = requestAnimationFrame(whilePlaying);
+        playMusic();
       }
     });
   };
@@ -157,7 +174,7 @@ function Player() {
   const [prevNextClicked, setPrevNextClicked] = useState(false);
 
   const fetchNowPlayingInfo = async () => {
-    console.log("fetchNowPlayingInfo triggered!!!!!!!!!");
+    // console.log("fetchNowPlayingInfo triggered!!!!!!!!!");
     return fetch(
       `https://api.spotify.com/v1/me/player/currently-playing`,
 
@@ -168,18 +185,71 @@ function Player() {
           // We can pass around the access token as a bearer with the token.
           Accept: "application/json",
           Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
-          // "Content-Length": 0,
         },
       }
     );
   };
 
-  const fetchNextSongInfo = async () => {
-    console.log("Before click prevNext value:", prevNextClicked);
-    setPrevNextClicked(true);
-    console.log("After click prevNext value:", prevNextClicked);
+  function msToMinutesAndSeconds(ms) {
+    let minutes = Math.floor(ms / 60000);
+    // console.log({ minutes });
+    let seconds = Number(((ms % 60000) / 1000).toFixed(0));
+    // console.log({ seconds });
+    return seconds >= 60
+      ? minutes + 1 + ":00"
+      : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  }
 
-    console.log("fetchNextSongInfo triggered!!!!!!!!!");
+  const fetchDuration = async () => {
+    const response = await fetchNowPlayingInfo();
+    const song = await response.json();
+    // console.log({ song });
+    setSongInfo(song);
+    // console.log("songInfo:", songInfo);
+    const progress_ms = song.progress_ms;
+    // console.log({ progress_ms });
+    setProgressMs(progress_ms);
+    const duration_ms = song.item?.duration_ms;
+    // console.log({ duration_ms });
+    setDurationMs(duration_ms);
+    const currentDuration = msToMinutesAndSeconds(0);
+    // console.log({ currentDuration });
+    setCurrentDurationMin(currentDuration);
+    const total_duration = msToMinutesAndSeconds(song.item?.duration_ms);
+    // console.log({ total_duration });
+    setTotalDurationMin(total_duration);
+  };
+
+  useEffect(() => {
+    fetchDuration();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isPlaying) {
+        if (progressMs >= durationMs) return;
+        if (progressMs <= durationMs) {
+          // console.log({ progressMs });
+          let progressWidth = (progressMs / durationMs) * 100;
+          // console.log({ progressWidth });
+          progressBar.current.style.width = `${progressWidth}%`;
+          const currentDuration = msToMinutesAndSeconds(progressMs);
+          // console.log({ currentDuration });
+          setCurrentDurationMin(currentDuration);
+          progressMs += 1000;
+          setProgressMs(progressMs);
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [progressMs, isPlaying, fetchNextSongInfo, fetchPreviousSongInfo]);
+
+  const fetchNextSongInfo = async (id) => {
+    // console.log("fetchNextSongInfo triggered!!!!!!!!!");
+    setPrevNextClicked(true);
+    setIsPlaying(true);
+    // spotifyApi.skipToNext();
 
     await fetch(
       `https://api.spotify.com/v1/me/player/next`,
@@ -187,8 +257,6 @@ function Player() {
       {
         method: "POST",
         headers: {
-          //When you make a request to an API endpoint that access token is put inside the header.
-          // We can pass around the access token as a bearer with the token.
           Accept: "application/json",
           Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
           "Content-Length": 0,
@@ -196,113 +264,34 @@ function Player() {
       }
     );
 
-    const response = await fetchNowPlayingInfo();
-    const song = await response.json();
-    console.log({ song });
-    setSongInfo(song);
-    console.log("songInfo:", songInfo);
-    console.log("songInfo href:", songInfo.external_urls?.spotify);
-    // fetchNowPlayingSongUri(songInfo.id);
+    fetchDuration();
   };
 
-  const fetchPreviousSongInfo = async () => {
-    console.log("Before click prevNext value:", prevNextClicked);
-    setPrevNextClicked(true);
-    console.log("After click prevNext value:", prevNextClicked);
+  const fetchPreviousSongInfo = async (id) => {
+    // console.log("fetchPreviousSongInfo triggered!!!!!!!!!");
 
-    console.log("fetchPreviousSongInfo triggered!!!!!!!!!");
+    setPrevNextClicked(true);
+    setIsPlaying(true);
+    //  spotifyApi.skipToPrevious();
 
     await fetch(`https://api.spotify.com/v1/me/player/previous`, {
       method: "POST",
       headers: {
-        //When you make a request to an API endpoint that access token is put inside the header.
-        // We can pass around the access token as a bearer with the token.
         Accept: "application/json",
         Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
       },
     });
-    const response = await fetchNowPlayingInfo();
-    const song = await response.json();
-    console.log({ song });
-    setSongInfo(song);
-    console.log("songInfo:", songInfo);
-    console.log("songInfo href:", songInfo.external_urls?.spotify);
-    // fetchNowPlayingSongUri(songInfo.id);
+
+    fetchDuration();
   };
 
-  /////
-  // const [auto, setAuto] = useState(false);
-  // //   duration state
-  // const [duration, setDuration] = useState(0);
-  // const [currentTime, setCurrenttime] = useState(0);
-
-  // const audioPlayer = useRef(); //   reference to our audio component
-  // const progressBar = useRef(); //   reference to our prgressbar
-  // const animationRef = useRef(); //  reference to our animation
-
-  // useEffect(() => {
-  //   const seconds = Math.floor(audioPlayer.current?.duration);
-  //   setDuration(seconds);
-
-  //   // set max prop with out seconds in input[range]
-  //   progressBar.current.max = seconds;
-  // }, [audioPlayer?.current?.loadedmetada, audioPlayer?.current?.readyState]);
-
-  // const whilePlaying = () => {
-  //   progressBar.current.value = audioPlayer.current.currentTime;
-  //   changeCurrentTime();
-  //   // need to run more than once
-  //   animationRef.current = requestAnimationFrame(whilePlaying);
-  // };
-
-  // const calculateTime = (sec) => {
-  //   const minutes = Math.floor(sec / 60);
-  //   const returnMin = minutes < 10 ? `0${minutes}` : `${minutes}`;
-  //   const seconds = Math.floor(sec % 60);
-  //   const returnSec = seconds < 10 ? `0${seconds}` : `${seconds}`;
-  //   return `${returnMin} : ${returnSec}`;
-  // };
-
-  // const changeProgress = () => {
-  //   audioPlayer.current.currentTime = progressBar.current.value;
-
-  //   // progressBar.current.style.setProperty(
-  //   //   "--played-width",
-  //   //   `${(progressBar.current.value / duration) * 100}%`
-  //   // );
-
-  //   // setCurrenttime(progressBar.current.value);
-
-  //   changeCurrentTime();
-  // };
-
-  // const changeCurrentTime = () => {
-  //   progressBar.current.style.setProperty(
-  //     "--played-width",
-  //     `${(progressBar.current.value / duration) * 100}%`
-  //   );
-
-  //   setCurrenttime(progressBar.current.value);
-  // };
-
-  /////
+  const progressBar = useRef(); //   reference to our progressbar
 
   return (
     <div className="flex flex-col w-full  bg-gradient-to-b from-black to-gray-900 text-white border-t border-gray-800">
-      <div className="h-24 grid grid-cols-3 text-xs md:text-base px-2 md:px-8">
-        {/* {songData ? ( */}
+      <div className="h-20 grid grid-cols-3 text-xs md:text-base px-2 md:px-8">
         {(prevNextClicked ? songInfo : songData) ? (
           <div className="flex items-center space-x-4">
-            {/* <div className=" w-10 h-10 cursor-pointer relative">
-          <Image
-            className=""
-            src={songData?.album.images?.[0]?.url}
-            alt="logo"
-            layout="fill" // required
-            objectFit="cover" // change to suit your needs
-            priority
-          />
-        </div> */}
             <img
               className="hidden md:inline w-10 h-10 cursor-pointer"
               src={
@@ -311,16 +300,6 @@ function Player() {
               }
               alt={songInfo?.item?.album?.name || songData?.album?.name}
             />
-            {/* <audio
-              className=""
-              src={
-                prevNextClicked
-                  ? songInfo?.item?.preview_url
-                  : songData?.preview_url
-              }
-              preload="metadata"
-              ref={audioPlayer}
-            /> */}
             <div>
               <h3>{songInfo?.item?.name || songData?.name}</h3>
               <p>
@@ -344,18 +323,9 @@ function Player() {
           <SwitchHorizontalIcon className="playerButton" />
           <RewindIcon
             className="playerButton"
-            // onClick={() =>
-            //   spotifyApi.skipToPrevious().then(
-            //     function () {
-            //       console.log("Skip to previous");
-            //     },
-            //     function (err) {
-            //       //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-            //       console.log("Something went wrong!", err);
-            //     }
-            //   )
-            // }
-            onClick={() => fetchPreviousSongInfo()}
+            onClick={() =>
+              fetchPreviousSongInfo(songInfo?.item?.id || songData?.id)
+            }
           />
           {isPlaying ? (
             <PauseIcon
@@ -371,33 +341,39 @@ function Player() {
 
           <FastForwardIcon
             className="playerButton"
-            // onClick={() =>
-            //   spotifyApi.skipToNext().then(
-            //     function () {
-            //       console.log("Skip to next");
-            //     },
-            //     function (err) {
-            //       //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-            //       console.log("Something went wrong!", err);
-            //     }
-            //   )
-            // }
-            onClick={() => fetchNextSongInfo()}
+            onClick={() =>
+              fetchNextSongInfo(songInfo?.item?.id || songData?.id)
+            }
           />
           <ReplyIcon className="playerButton" />
         </div>
         <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
-          <VolumeDownIcon
+          {/* <VolumeDownIcon
             className="playerButton"
             onClick={() => volume > 0 && setVolume(volume - 10)}
-          />
+          /> */}
+          <span className="sounds-icon" onClick={() => setMuted(!isMuted)}>
+            {isMuted ? (
+              <VolumeOffIcon className="playerButton" />
+            ) : (
+              <VolumeUpIcon className="playerButton" />
+            )}
+          </span>
           <input
             className="w-14 md:w-28"
             type="range"
             min={0}
             max={100}
-            value={volume}
-            onChange={(e) => setVolume(Number(e.target.value))}
+            value={isMuted ? 0 : volume}
+            // onChange={(e) => setVolume(Number(e.target.value))}
+            onChange={(e) => {
+              setVolume(Number(e.target.value));
+              if (Number(e.target.value) === 0) {
+                setMuted(true);
+              } else if (Number(e.target.value) > 0) {
+                setMuted(false);
+              }
+            }}
           />
           <VolumeUpIcon
             className="playerButton"
@@ -405,27 +381,27 @@ function Player() {
           />
         </div>
       </div>
-      {/* Player Progress Bar */}
-      {/* <div className="grid grid-cols-7 text-xs md:text-base ">
+
+      {/* Custom Progress Area */}
+      <div className="grid grid-cols-7 text-xs md:text-base mb-10">
         <div className="col-span-1 md:col-span-2"></div>
-        <div className="playerBottom col-span-5 md:col-span-3 flex items-center justify-between mb-5">
-          <div className="currentTime">{calculateTime(currentTime)}</div>
-          <input
-            type="range"
-            className="progressBar w-[78%] h-[5px] outline-none"
+        <div className="progress-area col-span-5 md:col-span-3 h-[6px] w-full bg-red rounded-full cursor-pointer bg-white/30">
+          <div
+            className="progress-bar h-[6px] w-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 relative before:content-['*'] before:absolute before:h-[12px] before:w-[12px] before:bg-[#f0f0f0] before:rounded-full before:top-1/2 before:right-[-5px] before:translate-y-[-50%] bg-inherit before:opacity-0 before:transition-all before:ease-in-out before:hover:opacity-100"
             ref={progressBar}
-            defaultValue="0"
-            onChange={changeProgress}
-            autoPlay={auto}
-          />
-          <div className="duration">
-            {duration && !isNaN(duration) && calculateTime(duration)
-              ? duration && !isNaN(duration) && calculateTime(duration)
-              : "00:00"}
+            id="progressBar"
+          ></div>
+          <div className="timer flex items-center justify-between mt-1">
+            <span className="current text-xs text-gray-400">
+              {currentDurationMin}
+            </span>
+            <span className="duration text-xs text-gray-400">
+              {totalDurationMin}
+            </span>
           </div>
         </div>
         <div className="col-span-1 md:col-span-2"></div>
-      </div> */}
+      </div>
     </div>
   );
 }

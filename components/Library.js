@@ -33,36 +33,40 @@ function Library() {
       <Header />
 
       <section className="flex-col text-white p-8 pb-20">
-        <div className="grid overflow-y-scroll scrollbar-hide py-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-8 p-4">
-          <Link href="/collection/tracks">
-            <div className=" p-5 space-x-2 space-y-3 ">
-              <div className="w-[260px] h-[260px] rounded-lg bg-gradient-to-b to-indigo-500  from-indigo-900 text-white/80 cursor-pointer hover:scale-105 hover:text-white/100 transition duration-200 ease-out group relative">
-                <h3 className="font-extrabold text-lg truncate w-44 absolute bottom-10 left-10">
-                  Liked Songs
-                </h3>
-                <h6 className="absolute bottom-5 left-10">
-                  {likedSongInfo?.total} Liked songs
-                </h6>
-                {/* <p className="absolute bottom-5 left-10">{likedSongInfo?.items.map((info)=>{info.track.name
-               info.track.artists?.[0].name})}</p> */}
-                <p className="absolute bottom-20 left-10">
-                  {likedSongInfo?.slice(0, 3).map((info) => (
-                    <div className="flex w-72">
-                      <span className="font-bold truncate">
-                        {info.track.name} &nbsp;
-                      </span>
-                      <span className="font-light truncate">
-                        {info.track?.artists?.[0].name}
-                      </span>
-                    </div>
-                  ))}
-                </p>
+        <div className="grid overflow-y-scroll scrollbar-hide py-4 grid-cols-8 lg:grid-cols-9 xl:grid-cols-9 gap-x-4 gap-y-8 p-4">
+          <div className="col-span-4 lg:col-span-3  xl:col-span-3">
+            <Link href="/collection/tracks">
+              <div className=" p-5 space-x-2 space-y-3 ">
+                <div className="w-full h-[260px] rounded-lg bg-gradient-to-b to-indigo-500  from-indigo-900 text-white/80 cursor-pointer hover:scale-105 hover:text-white/100 transition duration-200 ease-out group relative">
+                  <h3 className="font-extrabold text-lg truncate w-44 absolute bottom-10 left-10">
+                    Liked Songs
+                  </h3>
+                  <h6 className="absolute bottom-5 left-10">
+                    {likedSongInfo?.total} Liked songs
+                  </h6>
+                  <p className="absolute bottom-20 left-10">
+                    {likedSongInfo?.slice(0, 3).map((info) => (
+                      <div className="flex w-60">
+                        <span className="font-bold truncate">
+                          {info.track.name} &nbsp;
+                        </span>
+                        <span className="font-light truncate">
+                          {info.track?.artists?.[0].name}
+                        </span>
+                      </div>
+                    ))}
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          </div>
+
           {userPlaylist.length > 0 &&
             userPlaylist?.map((playlist) => (
-              <div key={playlist.id}>
+              <div
+                key={playlist.id}
+                className="col-span-4 lg:col-span-3 xl:col-span-2"
+              >
                 <Link
                   href={`/playlist/${encodeURIComponent(playlist.id)}`}
                   className=""

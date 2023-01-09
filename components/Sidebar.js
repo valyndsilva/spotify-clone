@@ -13,6 +13,7 @@ import SidebarOption from "./SidebarOption";
 import spotifyImg from "../public/spotify.jpeg";
 import { SearchIcon, LibraryIcon, PlusIcon } from "@heroicons/react/outline";
 import { HomeIcon, HeartIcon } from "@heroicons/react/solid";
+import { useRouter } from "next/router";
 function Sidebar() {
   const spotifyApi = useSpotify();
   const { data: session, status } = useSession();
@@ -31,7 +32,14 @@ function Sidebar() {
         setUserPlaylist(data.body.items);
       });
     }
-  }, [session, spotifyApi]);
+  }, [session, spotifyApi, playlistId]);
+
+  const router = useRouter();
+
+  const handleClick = (id) => {
+    setPlaylistId(id);
+    router.push(`/playlist/${id}`);
+  };
 
   return (
     <div className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900  h-screen overflow-y-scroll scrollbar-hide hidden  sm:max-w-[12rem] lg:max-w-[20rem] md:inline-flex md:max-w-[18rem] pb-36">
@@ -82,7 +90,7 @@ function Sidebar() {
         {userPlaylist?.map((playlist) => (
           <p
             key={playlist.id}
-            onClick={() => setPlaylistId(playlist.id)}
+            onClick={() => handleClick(playlist.id)}
             className="cursor-pointer hover:text-white"
           >
             {playlist.name}
@@ -94,3 +102,28 @@ function Sidebar() {
 }
 
 export default Sidebar;
+
+{
+  {
+    /* <p
+  key={playlist.id}
+  onClick={() => setPlaylistId(playlist.id)}
+  className="cursor-pointer hover:text-white"
+>
+  {playlist.name}
+</p> */
+  }
+
+  // <Link
+  //         href={{
+  //           pathname: "/playlist/[id]",
+  //           query: { id: playlist.id },
+  //         }}
+  //         key={playlist.id}
+  //         className="cursor-pointer hover:text-white"
+  //       >
+  //         <p onClick={() => setPlaylistId(playlist.id)}>
+  //           {playlist.name}
+  //         </p>
+  //       </Link>
+}

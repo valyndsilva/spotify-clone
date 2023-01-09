@@ -12,6 +12,7 @@ import {
   currentAlbumSongIdState,
   currentAlbumUriState,
   likedSongInfoState,
+  currentSongAlbumUriState,
 } from "../atoms/songAtom";
 import useSpotify from "./useSpotify";
 
@@ -27,14 +28,15 @@ function useSongInfo() {
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
-  const currentAlbumId = useRecoilValue(currentAlbumIdState);
-
   const [currentSongUri, setCurrentSongUri] =
     useRecoilState(currentSongUriState);
 
-  const [currentAlbumSongUri, setCurrentAlbumSongUri] = useRecoilState(
-    currentAlbumSongUriState
+  const [currentSongAlbumUri, setCurrentSongAlbumUri] = useRecoilState(
+    currentSongAlbumUriState
   );
+
+  const [currentAlbumId, setCurrentAlbumId] =
+    useRecoilState(currentAlbumIdState);
 
   const [currentAlbumUri, setCurrentAlbumUri] =
     useRecoilState(currentAlbumUriState);
@@ -55,18 +57,22 @@ function useSongInfo() {
         },
       }
     ).then((res) => res.json());
-    console.log("fetchSongInfo triggered!!!!!!!!!");
-    console.log({ trackInfo });
+    // console.log("fetchSongInfo triggered!!!!!!!!!");
+    // console.log({ trackInfo });
     setSongInfo(trackInfo);
     const trackId = trackInfo?.id;
-    console.log({ trackId });
+    // console.log({ trackId });
     setCurrentTrackId(trackId);
     const songUri = trackInfo?.uri;
-    console.log({ songUri });
-    console.log({ currentAlbumSongUri });
-    currentAlbumSongUri
-      ? setCurrentSongUri(currentAlbumSongUri)
-      : setCurrentSongUri(songUri);
+    // console.log({ songUri });
+    setCurrentSongUri(songUri);
+    const albumUri = trackInfo?.album.uri;
+    // console.log({ albumUri });
+    setCurrentSongAlbumUri(albumUri);
+    const albumId = trackInfo?.album.id;
+    // console.log({ albumId });
+    setCurrentAlbumId(albumId);
+    // fetchAlbumInfo();
   };
 
   useEffect(() => {
@@ -75,61 +81,61 @@ function useSongInfo() {
     }
   }, [currentTrackId, currentSongUri, spotifyApi, session]);
 
-  const fetchAlbumInfo = async () => {
-    const albumInfo = await fetch(
-      `https://api.spotify.com/v1/albums/${currentAlbumId}`,
-      {
-        headers: {
-          //When you make a request to an API endpoint that access token is put inside the header.
-          // We can pass around the access token as a bearer with the token.
-          Accept: "application/json",
-          Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
-        },
-      }
-    ).then((res) => res.json());
+  // const fetchAlbumInfo = async () => {
+  //   const albumInfo = await fetch(
+  //     `https://api.spotify.com/v1/albums/${currentAlbumId}`,
+  //     {
+  //       headers: {
+  //         //When you make a request to an API endpoint that access token is put inside the header.
+  //         // We can pass around the access token as a bearer with the token.
+  //         Accept: "application/json",
+  //         Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+  //       },
+  //     }
+  //   ).then((res) => res.json());
 
-    console.log("fetchAlbumInfo triggered!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log({ albumInfo });
-    setAlbumInfo(albumInfo);
+  //   // console.log("fetchAlbumInfo triggered!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  //   // console.log({ albumInfo });
+  //   setAlbumInfo(albumInfo);
 
-    const albumSongId = albumInfo?.tracks?.items[0]?.id;
-    console.log({ albumSongId });
-    setCurrentTrackId(albumSongId);
-    setCurrentAlbumSongId(albumSongId);
-    const albumSongUri = albumInfo?.tracks?.items[0]?.uri;
-    console.log({ albumSongUri });
-    setCurrentAlbumSongUri(albumSongUri);
-    const albumUri = albumInfo?.uri;
-    console.log({ albumUri });
-    setCurrentAlbumUri(albumUri);
-  };
+  //   const albumSongId = albumInfo?.tracks?.items[0]?.id;
+  //   // console.log({ albumSongId });
+  //   setCurrentTrackId(albumSongId);
+  //   setCurrentAlbumSongId(albumSongId);
+  //   const albumSongUri = albumInfo?.tracks?.items[0]?.uri;
+  //   // console.log({ albumSongUri });
+  //   setCurrentSongAlbumUri(albumSongUri);
+  //   const albumUri = albumInfo?.uri;
+  //   // console.log({ albumUri });
+  //   setCurrentAlbumUri(albumUri);
+  // };
 
-  useEffect(() => {
-    if (spotifyApi.getAccessToken() && currentAlbumId) {
-      fetchAlbumInfo();
-    }
-  }, [currentAlbumId, spotifyApi, session]);
+  // useEffect(() => {
+  //   if (spotifyApi.getAccessToken() && currentAlbumId) {
+  //     fetchAlbumInfo();
+  //   }
+  // }, [currentAlbumId, spotifyApi, session]);
 
-  const fetchLikedSongInfo = async () => {
-    const LikedSongInfo = await fetch(`https://api.spotify.com/v1/me/tracks`, {
-      headers: {
-        //When you make a request to an API endpoint that access token is put inside the header.
-        // We can pass around the access token as a bearer with the token.
-        Accept: "application/json",
-        Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
-      },
-    }).then((data) => data.json());
+  // const fetchLikedSongInfo = async () => {
+  //   const LikedSongInfo = await fetch(`https://api.spotify.com/v1/me/tracks`, {
+  //     headers: {
+  //       //When you make a request to an API endpoint that access token is put inside the header.
+  //       // We can pass around the access token as a bearer with the token.
+  //       Accept: "application/json",
+  //       Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+  //     },
+  //   }).then((data) => data.json());
 
-    console.log("fetchLikedSongInfo triggered!!!!!!!!!");
-    // console.log( LikedSongInfo.items );
-    setLikedSongInfo(LikedSongInfo.items);
-  };
+  //   // console.log("fetchLikedSongInfo triggered!!!!!!!!!");
+  //   // console.log( LikedSongInfo.items );
+  //   setLikedSongInfo(LikedSongInfo.items);
+  // };
 
-  useEffect(() => {
-    if (spotifyApi.getAccessToken()) {
-      fetchLikedSongInfo();
-    }
-  }, [spotifyApi, session]);
+  // useEffect(() => {
+  //   if (spotifyApi.getAccessToken()) {
+  //     fetchLikedSongInfo();
+  //   }
+  // }, [spotifyApi, session]);
 
   return songInfo;
 }

@@ -140,7 +140,7 @@ function Home() {
         </div>
         {playlistSongs.length > 0 &&
           playlistSongs.map((track, index) => (
-            <Songs track={track} order={index} />
+            <Songs key={track?.track.id} track={track} order={index} />
           ))}
       </section>
     </div>

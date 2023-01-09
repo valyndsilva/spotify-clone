@@ -1,39 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import React from "react";
+import { useRecoilState } from "recoil";
 import {
   isPlayingState,
-  currentAlbumIdState,
-  currentSongUriState,
   currentTrackIdState,
-  currentAlbumSongUriState,
-  currentAlbumSongIdState,
   currentAlbumUriState,
 } from "../atoms/songAtom";
 import useSpotify from "../hooks/useSpotify";
-import Image from "next/image";
-import { PauseIcon, HeartIcon, PlayIcon } from "@heroicons/react/solid";
-import { playState } from "../atoms/playerAtom";
 
 function RecentlyPlayedPoster({ track }) {
   console.log({ track });
   const spotifyApi = useSpotify();
-  const [hasLiked, setHasLiked] = useState(false);
-  const [currentAlbumId, setCurrentAlbumId] =
-    useRecoilState(currentAlbumIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-  const [currentSongUri, setCurrentSongUri] =
-    useRecoilState(currentSongUriState);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
-
-  const [currentAlbumSongUri, setCurrentAlbumSongUri] = useRecoilState(
-    currentAlbumSongUriState
-  );
-
   const [currentAlbumUri, setCurrentAlbumUri] =
     useRecoilState(currentAlbumUriState);
-
-  const [play, setPlay] = useRecoilState(playState);
 
   const handlePlayPause = () => {
     console.log(track);

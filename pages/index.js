@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { getSession } from "next-auth/react";
-import { Sidebar, Home, Player } from "../components";
+import { Sidebar, Home, Player, CustomPlayer, Player1 } from "../components";
 const Main = () => {
   return (
     <div className="bg-black h-screen overflow-hidden">
@@ -15,6 +15,7 @@ const Main = () => {
       </main>
       <div className="sticky bottom-0">
         <Player />
+
       </div>
     </div>
   );

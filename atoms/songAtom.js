@@ -50,8 +50,8 @@ export const currentAlbumUriState = atom({
   default: null, // default value (initial value)
 });
 
-export const currentAlbumSongUriState = atom({
-  key: "currentAlbumSongUriState", //unique ID(with respect to other atom/selectors)
+export const currentSongAlbumUriState = atom({
+  key: "currentSongAlbumUriState", //unique ID(with respect to other atom/selectors)
   default: null, // default value (initial value)
 });
 

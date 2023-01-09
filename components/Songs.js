@@ -8,19 +8,45 @@ import Link from "next/link";
 import { PlayIcon } from "@heroicons/react/solid";
 import { PauseIcon } from "@heroicons/react/outline";
 import { artistIdState } from "../atoms/artistAtom";
+import { playlistIdState } from "../atoms/playlistAtom";
 
 function Songs({ track, order }) {
   // console.log(track);
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
-  const [artistId, setArtistId] = useRecoilState(artistIdState);
+  // const [artistId, setArtistId] = useRecoilState(artistIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   // const artistid = track.track.artists?.[0].id;
   // console.log({ artistid });
+  const playlistId = useRecoilValue(playlistIdState);
+  // console.log(playlistId);
 
-  const handlePlay = () => {
-    console.log("handlePlay triggered in Song Component!!!!!!!!");
+  const fetchPlaylist = async (playlistId) => {
+    console.log("fetchPlaylist triggered!!!!!!!!!");
+    return fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}`,
+
+      {
+        method: "GET",
+        headers: {
+          //When you make a request to an API endpoint that access token is put inside the header.
+          // We can pass around the access token as a bearer with the token.
+          Accept: "application/json",
+          Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+        },
+      }
+    );
+  };
+
+  const handlePlay = async () => {
+    const response = await fetchPlaylist(playlistId);
+    const songsPlaylist = await response.json();
+    console.log({ songsPlaylist });
+    console.log(songsPlaylist?.tracks.items);
+
+    console.log("handlePlay triggered in Songs Component!!!!!!!!");
+    console.log(track);
     setCurrentTrackId(track.track.id);
     setIsPlaying(true);
     console.log(track.track.uri);
@@ -31,10 +57,7 @@ function Songs({ track, order }) {
   };
 
   return (
-    <div
-      key={track?.track.id}
-      className="text-white px-8 flex-col space-y-1 group"
-    >
+    <div className="text-white px-8 flex-col space-y-1 group">
       <div
         className="grid grid-cols-2 text-gray-500 px-5 py-4 rounded-lg cursor-pointer active:bg-slate-600  hover:bg-gray-900"
         onClick={handlePlay}

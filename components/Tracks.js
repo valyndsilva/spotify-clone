@@ -5,7 +5,7 @@ import {
   currentAlbumIdState,
   currentSongUriState,
   currentTrackIdState,
-  currentAlbumSongUriState,
+  currentSongAlbumUriState,
   currentAlbumSongIdState,
   currentAlbumUriState,
 } from "../atoms/songAtom";
@@ -28,8 +28,8 @@ function Tracks({ track, order }) {
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
-  const [currentAlbumSongUri, setCurrentAlbumSongUri] = useRecoilState(
-    currentAlbumSongUriState
+  const [currentSongAlbumUri, setCurrentSongAlbumUri] = useRecoilState(
+    currentSongAlbumUriState
   );
 
   const [currentAlbumUri, setCurrentAlbumUri] =
