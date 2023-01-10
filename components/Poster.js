@@ -8,6 +8,7 @@ import {
   currentAlbumSongUriState,
   currentAlbumSongIdState,
   currentAlbumUriState,
+  songInfoState,
 } from "../atoms/songAtom";
 import useSpotify from "../hooks/useSpotify";
 import Image from "next/image";
@@ -26,16 +27,17 @@ function Poster({ track }) {
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
+  const [songInfo, setSongInfo] = useRecoilState(songInfoState);
 
   const handlePlayPause = () => {
     console.log({ track });
 
     console.log(" handlePlayPause triggered in Result Component!!!!!!!!!");
+
     setCurrentTrackId(track.id); // triggers useSongInfo
     setIsPlaying(true);
     console.log(track.id);
     console.log(track.uri);
-
     spotifyApi.play({
       uris: [track.uri],
     });

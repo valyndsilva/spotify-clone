@@ -45,7 +45,7 @@ function Home() {
       spotifyApi
         .getPlaylist(playlistId)
         .then((data) => {
-          // console.log(data.body);
+          // console.log("getPlaylist:", data.body);
 
           const playlistData = {
             id: data.body.id,

@@ -6,6 +6,10 @@ export const playState = atom({
   key: "playState",
   default: false,
 });
+export const playerSongState = atom({
+  key: "playerSongState",
+  default: false,
+});
 
 export const playingTrackState = atom({
   key: "playingTrackState",
@@ -23,8 +27,34 @@ export const isDeviceActiveState = atom({
   default: false,
 });
 
-// export const volumeState = atom({
-//   key: "volumeState",
-//   default: 50,
-//   effects_UNSTABLE: [persistAtom],
-// });
+export const volumeState = atom({
+  key: "volumeState",
+  default: 50,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const durationMsState = atom({
+  key: "durationMsState",
+  default: false,
+});
+
+export const progressMsState = atom({
+  key: "progressMsState",
+  default: false,
+});
+
+export const currentDurationMinState = atom({
+  key: "currentDurationMinState",
+  default: false,
+});
+
+
+export const totalDurationMinState = atom({
+  key: "totalDurationMinState",
+  default: false,
+});
+
+export const currentProgressWidthState = atom({
+  key: "currentProgressWidthState",
+  default: false,
+});

@@ -8,6 +8,7 @@ import {
   currentSongAlbumUriState,
   currentAlbumSongIdState,
   currentAlbumUriState,
+  songInfoState,
 } from "../atoms/songAtom";
 import useSpotify from "../hooks/useSpotify";
 import Image from "next/image";
@@ -37,6 +38,7 @@ function Tracks({ track, order }) {
 
   const [play, setPlay] = useRecoilState(playState);
 
+  const [songInfo, setSongInfo] = useRecoilState(songInfoState);
   const handlePlay = () => {
     // console.log({ track });
     // console.log(" handlePlay triggered!!!!!!!!!");

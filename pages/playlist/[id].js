@@ -29,7 +29,7 @@ function Playlist() {
 
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   setPlaylistId(id);
-  console.log("playlistId in [id]", playlistId);
+  // console.log("playlistId in [id]", playlistId);
 
   const { data: session } = useSession();
   const spotifyApi = useSpotify();

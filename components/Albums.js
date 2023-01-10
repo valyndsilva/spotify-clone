@@ -1,8 +1,5 @@
-import { PlayIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import React from "react";
-import { useRecoilState } from "recoil";
-import { artistAlbumIdState } from "../atoms/artistAtom";
 
 function Albums({ albums }) {
   // console.log({ albums });

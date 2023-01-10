@@ -14,9 +14,14 @@ import {
   currentSongAlbumUriState,
 } from "../atoms/songAtom";
 import {
+  currentDurationMinState,
+  currentProgressWidthState,
   deviceIdState,
+  durationMsState,
   isDeviceActiveState,
   playState,
+  progressMsState,
+  totalDurationMinState,
   volumeState,
 } from "../atoms/playerAtom";
 import useSpotify from "../hooks/useSpotify";
@@ -41,16 +46,26 @@ import { playlistIdState } from "../atoms/playlistAtom";
 function Player() {
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
-  const [durationMs, setDurationMs] = useState();
-  const [currentDurationMin, setCurrentDurationMin] = useState();
-  const [totalDurationMin, setTotalDurationMin] = useState();
-  const [progressMs, setProgressMs] = useState();
 
+  const [prevNextClicked, setPrevNextClicked] = useState(false);
+  // console.log({prevNextClicked});
+  const songData = useSongInfo();
+  // console.log("songData from useSongInfo:", songData);
+
+  const [durationMs, setDurationMs] = useRecoilState(durationMsState);
+  const [currentDurationMin, setCurrentDurationMin] = useRecoilState(
+    currentDurationMinState
+  );
+  const [totalDurationMin, setTotalDurationMin] = useRecoilState(
+    totalDurationMinState
+  );
+  const [progressMs, setProgressMs] = useRecoilState(progressMsState);
+  const [currentProgressWidth, setCurrentProgressWidth] = useRecoilState(
+    currentProgressWidthState
+  );
   const playlistId = useRecoilValue(playlistIdState);
   // console.log(playlistId);
 
-  const songData = useSongInfo();
-  // console.log("songData from useSongInfo:", songData);
   const [hasLiked, setHasLiked] = useState(false);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
@@ -121,7 +136,7 @@ function Player() {
 
       // Get the User's Currently Playing Track
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        // console.log("Now Playing:", data.body?.item);
+        // console.log("Now Playing:", data.body);
         // setSongInfo(data.body?.item);
         setCurrentTrackId(data.body?.item?.id);
         // console.log(currentTrackId);
@@ -171,7 +186,6 @@ function Player() {
   };
 
   const [songInfo, setSongInfo] = useRecoilState(songInfoState);
-  const [prevNextClicked, setPrevNextClicked] = useState(false);
 
   const fetchNowPlayingInfo = async () => {
     // console.log("fetchNowPlayingInfo triggered!!!!!!!!!");
@@ -190,6 +204,44 @@ function Player() {
     );
   };
 
+  const fetchSongInfo = async () => {
+    // console.log("fetchSongInfo triggered!!!!!!!!!");
+    const trackInfo = await fetch(
+      `https://api.spotify.com/v1/tracks/${currentTrackId}`,
+      {
+        headers: {
+          //When you make a request to an API endpoint that access token is put inside the header.
+          // We can pass around the access token as a bearer with the token.
+          Accept: "application/json",
+          Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+        },
+      }
+    ).then((res) => res.json());
+    // console.log("fetchSongInfo triggered!!!!!!!!!");
+    // console.log({ trackInfo });
+    setSongInfo(trackInfo);
+    const trackId = trackInfo?.id;
+    // console.log({ trackId });
+    setCurrentTrackId(trackId);
+    const songUri = trackInfo?.uri;
+    // console.log({ songUri });
+    setCurrentSongUri(songUri);
+    const albumUri = trackInfo?.album.uri;
+    // console.log({ albumUri });
+    // setCurrentSongAlbumUri(albumUri);
+    // const albumId = trackInfo?.album.id;
+    // console.log({ albumId });
+    // setCurrentAlbumId(albumId);
+    // fetchAlbumInfo();
+  };
+
+  useEffect(() => {
+    if (spotifyApi.getAccessToken() && currentTrackId && currentSongUri) {
+      fetchSongInfo();
+      fetchInfo();
+    }
+  }, [currentTrackId, currentSongUri, spotifyApi, session]);
+
   function msToMinutesAndSeconds(ms) {
     let minutes = Math.floor(ms / 60000);
     // console.log({ minutes });
@@ -200,7 +252,7 @@ function Player() {
       : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   }
 
-  const fetchDuration = async () => {
+  const fetchInfo = async () => {
     const response = await fetchNowPlayingInfo();
     const song = await response.json();
     // console.log({ song });
@@ -221,8 +273,8 @@ function Player() {
   };
 
   useEffect(() => {
-    fetchDuration();
-  }, []);
+    fetchInfo();
+  }, [currentTrackId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -232,7 +284,8 @@ function Player() {
           // console.log({ progressMs });
           let progressWidth = (progressMs / durationMs) * 100;
           // console.log({ progressWidth });
-          progressBar.current.style.width = `${progressWidth}%`;
+          setCurrentProgressWidth(progressWidth);
+          progressBar.current.style.width = `${currentProgressWidth}%`;
           const currentDuration = msToMinutesAndSeconds(progressMs);
           // console.log({ currentDuration });
           setCurrentDurationMin(currentDuration);
@@ -241,9 +294,14 @@ function Player() {
         }
       }
     }, 1000);
-
     return () => clearInterval(interval);
-  }, [progressMs, isPlaying, fetchNextSongInfo, fetchPreviousSongInfo]);
+  }, [
+    currentTrackId,
+    progressMs,
+    isPlaying,
+    fetchNextSongInfo,
+    fetchPreviousSongInfo,
+  ]);
 
   const fetchNextSongInfo = async (id) => {
     // console.log("fetchNextSongInfo triggered!!!!!!!!!");
@@ -264,7 +322,7 @@ function Player() {
       }
     );
 
-    fetchDuration();
+    fetchInfo();
   };
 
   const fetchPreviousSongInfo = async (id) => {
@@ -282,7 +340,7 @@ function Player() {
       },
     });
 
-    fetchDuration();
+    fetchInfo();
   };
 
   const progressBar = useRef(); //   reference to our progressbar

@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 
 function Artists({ artist }) {
-  console.log({ artist });
+  // console.log({ artist });
 
   return (
     <>

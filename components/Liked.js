@@ -45,7 +45,7 @@ function Liked() {
         {/* <Songs tracks={likedSongInfo?.items} /> */}
         {likedSongInfo &&
           likedSongInfo.map((track, index) => (
-            <Songs track={track} order={index} />
+            <Songs key={track.track.id} track={track} order={index} />
           ))}
       </div>
     </div>
