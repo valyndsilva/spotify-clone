@@ -330,7 +330,7 @@ function Search() {
 
       <section className="bg-black ml-24 py-4 space-y-8 flex-grow md:mx-5 mb-20">
         {search ? (
-          <div className="max-w-6xl">
+          <div className="flex flex-col max-w-7xl">
             <div className="grid grid-cols-12 gap-3">
               {/* Search Top Artist Result */}
               <div className="col-span-4">
@@ -395,8 +395,8 @@ function Search() {
                 searchResults.map((track) => <Poster track={track} />)}
             </div>
 
-            <div className="grid grid-cols-12 gap-3">
               {/* Tracks */}
+            {/* <div className="grid grid-cols-12 gap-3">
               <div className="col-span-8 mb-5">
                 <h2 className="text-white font-bold mb-3">
                   {searchResults.length > 0 && `Songs Result for "${search}"`}
@@ -407,10 +407,10 @@ function Search() {
                       <Tracks track={track} order={index} />
                     ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* Recently Played Tracks */}
-              <div className="col-span-4">
+              {/* <div className="col-span-4">
                 <div className=" bg-[#0D0D0D] border-2 border-[#262626] p-4  rounded-xl space-y-4 mt-8 h-74">
                   <div className="flex items-center justify-between">
                     <h4 className="text-white font-semibold text-sm">
@@ -432,10 +432,10 @@ function Search() {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Search Playlists */}
-            <h2 className="text-white font-bold">
+            <h2 className="text-white font-bold mt-5">
               {searchPlaylistResults.length > 0 &&
                 `Playlist Result for "${search}"`}
             </h2>
@@ -446,7 +446,7 @@ function Search() {
             </div>
           </div>
         ) : (
-          <div className="max-w-6xl">
+          <div className="">
             <h2 className="text-2xl font-bold  mb-5">Browse All</h2>
             {/* <div className="grid gap-3 grid-cols-3 md:grid-cols-4"> */}
             <div className="grid gap-5 grid-cols-3 md:grid-cols-5 ">
