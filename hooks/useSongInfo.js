@@ -51,11 +51,11 @@ function useSongInfo() {
   // Fetch Current Song Track Playing In Player:
   const fetchCurrentSong = async () => {
     if (!currentTrackId && !currentSongUri) {
-      console.log("fetchCurrentSong Triggered!!");
+      // console.log("fetchCurrentSong Triggered!!");
 
       // Get the User's Currently Playing Track
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        console.log("Now Playing:", data.body);
+        // console.log("Now Playing:", data.body);
         setSongInfo(data.body);
         const trackId = data.body?.item?.id;
         // console.log(trackId);
@@ -81,7 +81,7 @@ function useSongInfo() {
 
   // Fetch Track based on currentTrackId if a Track is selected.
   const fetchSongInfo = async () => {
-    console.log("fetchSongInfo Triggered!!");
+    // console.log("fetchSongInfo Triggered!!");
     const trackInfo = await fetch(
       `https://api.spotify.com/v1/tracks/${currentTrackId}`,
       {

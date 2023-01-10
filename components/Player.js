@@ -303,6 +303,23 @@ function Player() {
     fetchPreviousSongInfo,
   ]);
 
+  const handleProgressArea = (e) => {
+    console.log(e);
+    let progressWidthVal = progressArea.current.clientWidth; // getting width of progress bar
+    // console.log({ progressWidthVal });
+    let clickedOffSetX = e.nativeEvent.offsetX;
+    // let clickedOffSetX = e?.offsetX; // getting offset x value
+    // console.log({ clickedOffSetX });
+    let songDuration = durationMs; // getting song total duration
+    // console.log({ songDuration });
+    let newProgressMs = (clickedOffSetX / progressWidthVal) * songDuration;
+    // console.log({ newProgressMs });
+    setProgressMs(newProgressMs);
+  };
+
+  //update song based on Progress Area
+  //TBC
+
   const fetchNextSongInfo = async (id) => {
     // console.log("fetchNextSongInfo triggered!!!!!!!!!");
     setPrevNextClicked(true);
@@ -344,6 +361,7 @@ function Player() {
   };
 
   const progressBar = useRef(); //   reference to our progressbar
+  const progressArea = useRef(); //   reference to our progressArea
 
   return (
     <div className="flex flex-col w-full  bg-gradient-to-b from-black to-gray-900 text-white border-t border-gray-800">
@@ -443,7 +461,11 @@ function Player() {
       {/* Custom Progress Area */}
       <div className="grid grid-cols-7 text-xs md:text-base mb-10">
         <div className="col-span-1 md:col-span-2"></div>
-        <div className="progress-area col-span-5 md:col-span-3 h-[6px] w-full bg-red rounded-full cursor-pointer bg-white/30">
+        <div
+          className="progress-area col-span-5 md:col-span-3 h-[6px] w-full bg-red rounded-full cursor-pointer bg-white/30"
+          ref={progressArea}
+          onClick={(e) => handleProgressArea(e)}
+        >
           <div
             className="progress-bar h-[6px] w-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 relative before:content-['*'] before:absolute before:h-[12px] before:w-[12px] before:bg-[#f0f0f0] before:rounded-full before:top-1/2 before:right-[-5px] before:translate-y-[-50%] bg-inherit before:opacity-0 before:transition-all before:ease-in-out before:hover:opacity-100"
             ref={progressBar}
