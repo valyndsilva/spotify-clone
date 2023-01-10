@@ -3,18 +3,12 @@
 ## .env.local:
 
 ```
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=
 NEXT_PUBLIC_CLIENT_ID=
 NEXT_PUBLIC_CLIENT_SECRET=
 JWT_SECRET=
 ```
-npm install react-player
-npm i react-player-controls
-npm i --save-dev @types/react-player-controls
-npm install screenfull
 
-https://www.npmjs.com/package/react-player-controls
-npm install rc-slider
 ## Scripts used:
 
 Create a new project folder with nextjs and tailwindcss framwework setup:
@@ -1180,9 +1174,10 @@ npm install @headlessui/react
 
 Add the Website and Redirect URIs in Spotify Developer API Dashboard and add a user that can have access to the app.
 Ex:
+
 ```
 Website:
-http://localhost:3000 
+http://localhost:3000
 OR
 https://spotify-clone-valyndsilva.vercel.app
 

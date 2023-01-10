@@ -28,7 +28,7 @@ function Playlist() {
   // console.log("url params id:", id);
 
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
-  setPlaylistId(id);
+  // setPlaylistId(id);
   // console.log("playlistId in [id]", playlistId);
 
   const { data: session } = useSession();

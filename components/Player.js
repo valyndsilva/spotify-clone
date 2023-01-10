@@ -174,7 +174,7 @@ function Player() {
   // Handle Play/Pause events if device id available and is_playing is set to true
   const handlePlayPause = async () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      console.log("handlePlayPause in Player Component:", data.body);
+      // console.log("handlePlayPause in Player Component:", data.body);
       if (data.body?.is_playing && data.body?.device.id) {
         setIsPlaying(false);
         pauseMusic();
