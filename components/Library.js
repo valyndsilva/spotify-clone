@@ -113,12 +113,3 @@ function Library() {
 }
 
 export default Library;
-{
-  /* <p
-            key={playlist.id}
-            onClick={() => setPlaylistId(playlist.id)}
-            className="cursor-pointer hover:text-white"
-          >
-            {playlist.name}
-          </p> */
-}
